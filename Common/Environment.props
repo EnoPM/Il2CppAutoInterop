@@ -1,0 +1,5 @@
+<Project>
+    <PropertyGroup>
+        <UnityGameDirectory>$(SolutionDir)\GameFiles</UnityGameDirectory>
+    </PropertyGroup>
+</Project>

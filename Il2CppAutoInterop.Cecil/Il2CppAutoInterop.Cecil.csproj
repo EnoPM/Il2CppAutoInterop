@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <Import Project="$(SolutionDir)\Common\Compatibility.props" />
+    
+    <PropertyGroup>
+        <AssemblyVersion>0.0.1</AssemblyVersion>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Mono.Cecil" Version="0.11.4" />
+    </ItemGroup>
+
+    <Import Project="$(SolutionDir)\Common\BepInExCoreAddon.props" />
+
+</Project>
