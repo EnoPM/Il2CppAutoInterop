@@ -1,14 +1,15 @@
-﻿using Il2CppAutoInterop.Cecil.Resolvers;
+﻿using Il2CppAutoInterop.Cecil.Interfaces;
 using Mono.Cecil;
 
 namespace Il2CppAutoInterop.Cecil.Extensions;
 
 public static class ModuleDefinitionExtensions
 {
+    
     public static TypeDefinition? Resolve(
         this ModuleDefinition module,
         string typeFullName,
-        ResolverContext? resolverContext = null
+        IAssemblyLoaderContext? resolverContext = null
     )
     {
         return module.ResolveInModule(typeFullName) ?? module.ResolveInReferences(typeFullName, resolverContext);
@@ -28,7 +29,7 @@ public static class ModuleDefinitionExtensions
     public static TypeDefinition? ResolveInReferences(
         this ModuleDefinition module,
         string typeFullName,
-        ResolverContext? resolverContext = null
+        IAssemblyLoaderContext? resolverContext = null
     )
     {
         foreach (var reference in module.AssemblyReferences)
@@ -44,12 +45,25 @@ public static class ModuleDefinitionExtensions
             }
             catch (AssemblyResolutionException)
             {
-                Console.WriteLine($"Warning: Unable to resolve assembly {reference.FullName}");
+                // ignored
             }
         }
 
         if (resolverContext == null) return null;
 
         return !resolverContext.TryResolveUnreferenced(module, typeFullName, out var resolvedType) ? null : resolvedType;
+    }
+    
+    public static List<TypeDefinition> GetAllTypes(this ModuleDefinition module)
+    {
+        var result = new List<TypeDefinition>();
+        foreach (var type in module.Types)
+        {
+            result.Add(type);
+            if (!type.HasNestedTypes) continue;
+            result.AddRange(type.NestedTypes);
+        }
+
+        return result;
     }
 }

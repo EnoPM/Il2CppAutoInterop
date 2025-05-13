@@ -1,5 +1,5 @@
-﻿using System.Reflection;
-using Il2CppAutoInterop.BepInEx;
+﻿using Il2CppAutoInterop.BepInEx.Extensions;
+using Il2CppAutoInterop.BepInEx.Processors;
 
 namespace Il2CppAutoInterop.Compiler;
 
@@ -9,33 +9,21 @@ internal static class Program
     {
         if (args.Length == 0)
         {
-            throw InvalidArguments(args);
+            throw new ArgumentException("Please specify an assembly path to load");
         }
 
         var inputPath = args[0];
-        
+
         Console.WriteLine($"Processing assembly: {inputPath}");
+
+        var interopProcessor = new BepInExIl2CppPluginProcessor(inputPath);
         
-        var context = new BepInExContext(inputPath);
-
-        var processor = new PluginAssemblyProcessor(context);
-        processor.ProcessAsync().Wait();
+        interopProcessor.Dependencies.RegisterBepInExPlugin(inputPath);
+        
+        interopProcessor.Preload();
+        interopProcessor.Process();
+        
+        interopProcessor.IncrementAssemblyVersion();
+        interopProcessor.Save(inputPath);
     }
-
-    private static Exception InvalidArguments(string[] _)
-    {
-        var assemblyLocation = Assembly.GetExecutingAssembly().Location;
-        var executableName = Path.GetFileName(assemblyLocation);
-
-        var commandUsage = string.Join(' ',
-            executableName,
-            Required(Quoted(@"C:\input.dll"))
-        );
-
-        return new ArgumentException($"Correct usage: {commandUsage}");
-    }
-
-    private static string Quoted(string value) => $"\"{value}\"";
-    private static string Optional(string value) => $"({value})";
-    private static string Required(string value) => $"[{value}]";
 }

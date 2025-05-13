@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
     <Import Project="$(SolutionDir)\Common\Compatibility.props" />
 
@@ -7,8 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Il2CppAutoInterop.Core\Il2CppAutoInterop.Core.csproj" />
-        <ProjectReference Include="..\Il2CppAutoInterop\Il2CppAutoInterop.csproj" />
+      <ProjectReference Include="..\Il2CppAutoInterop.Cecil\Il2CppAutoInterop.Cecil.csproj" />
     </ItemGroup>
 
     <Import Project="$(SolutionDir)\Common\BepInExCoreAddon.props" />

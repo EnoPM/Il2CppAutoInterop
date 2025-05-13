@@ -11,10 +11,6 @@
         <ProjectReference Include="..\Il2CppAutoInterop.Reflection\Il2CppAutoInterop.Reflection.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="DependencyInjection\Utils\" />
-    </ItemGroup>
-
     <Import Project="$(SolutionDir)\Common\BepInExCoreAddon.props" />
 
 </Project>
