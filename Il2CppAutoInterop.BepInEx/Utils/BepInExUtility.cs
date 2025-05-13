@@ -2,6 +2,7 @@
 
 internal static class BepInExUtility
 {
+    private const string BepInExDirectoryName = "BepInEx";
     internal static readonly string[] Directories = ["core", "plugins", "interop", "patchers", "dotnet"];
     
     internal static string FindBepInExDirectoryFromChildPath(string path)
@@ -33,7 +34,7 @@ internal static class BepInExUtility
     private static bool IsBepInExDirectory(string directoryPath)
     {
         var name = Path.GetFileName(directoryPath);
-        if (name != "BepInEx") return false;
+        if (name != BepInExDirectoryName) return false;
         var bepInExDirectories = GetBepInExDirectoriesAbsolutePaths(directoryPath);
         var subDirectories = Directory.GetDirectories(directoryPath).ToList();
         return subDirectories.Count != 0 && bepInExDirectories.All(subDirectories.Contains);

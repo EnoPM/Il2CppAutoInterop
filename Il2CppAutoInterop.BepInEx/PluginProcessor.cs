@@ -1,34 +1,56 @@
-﻿using Il2CppAutoInterop.Cecil.Interfaces;
-using Il2CppAutoInterop.Dependency;
+﻿using Il2CppAutoInterop.BepInEx.Extensions;
+using Il2CppAutoInterop.BepInEx.Processors;
+using Il2CppAutoInterop.Cecil.Interfaces;
+using Il2CppAutoInterop.Core;
+using Il2CppAutoInterop.Core.Utils;
 
-namespace Il2CppAutoInterop.BepInEx.Processors;
+namespace Il2CppAutoInterop.BepInEx;
 
-public sealed class BepInExIl2CppPluginProcessor
+public sealed class PluginProcessor
 {
     private readonly string _pluginAssemblyPath;
     private readonly IAssemblyLoaderContext _loader;
-    private BepInExAssemblyProcessor? _processor;
+    private AssemblyProcessor? _processor;
 
     public IAssemblyDependencyManager Dependencies => _loader.Dependencies;
     
-    public BepInExIl2CppPluginProcessor(string pluginAssemblyPath)
+    public PluginProcessor(string pluginAssemblyPath)
     {
         _pluginAssemblyPath = pluginAssemblyPath;
         _loader = new AssemblyLoader();
     }
 
+    public void Run() => Run(_pluginAssemblyPath);
+
+    public void Run(string outputFilePath)
+    {
+        using (new TimedExecution("Register BepInEx plugin dependencies"))
+        {
+            Dependencies.RegisterBepInExPlugin(_pluginAssemblyPath);
+        }
+
+        using (new TimedExecution($"Preloading dependencies for assembly {Path.GetFileName(_pluginAssemblyPath)}", ConsoleColor.Yellow))
+        {
+            Preload();
+        }
+
+        using (new TimedExecution($"Process {nameof(PluginProcessor)}", ConsoleColor.Magenta))
+        {
+            Process();
+        }
+        
+        IncrementAssemblyVersion();
+
+        using (new TimedExecution("Saving changes to input assembly", ConsoleColor.Green))
+        {
+            Save(outputFilePath);
+        }
+    }
+
     public void Preload()
     {
-        var start = DateTime.UtcNow;
-        Console.WriteLine($"Preloading dependencies for assembly '{Path.GetFileName(_pluginAssemblyPath)}'...");
-        
         var mainAssembly = _loader.Load(_pluginAssemblyPath);
-        _processor = new BepInExAssemblyProcessor(mainAssembly, _loader);
-        
-        var end = DateTime.UtcNow;
-        var elapsed = end - start;
-        
-        Console.WriteLine($"Preloading ended in  {elapsed.TotalMilliseconds}ms");
+        _processor = new AssemblyProcessor(mainAssembly, _loader);
     }
 
     public void Process()

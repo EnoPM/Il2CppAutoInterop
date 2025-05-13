@@ -1,7 +1,6 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using Mono.Cecil;
+﻿using Mono.Cecil;
 
-namespace Il2CppAutoInterop.Dependency;
+namespace Il2CppAutoInterop.Core;
 
 public sealed class DependencyFile
 {

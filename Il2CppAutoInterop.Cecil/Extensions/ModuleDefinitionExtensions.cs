@@ -19,8 +19,10 @@ public static class ModuleDefinitionExtensions
     {
         foreach (var type in module.Types)
         {
-            var result = type.FindNestedType(typeFullName);
-            if (result != null) return result;
+            if (type.TryFindNestedType(typeFullName, out var nestedType))
+            {
+                return nestedType;
+            }
         }
 
         return null;

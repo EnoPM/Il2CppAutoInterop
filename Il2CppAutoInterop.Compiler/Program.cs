@@ -1,4 +1,5 @@
-﻿using Il2CppAutoInterop.BepInEx.Extensions;
+﻿using Il2CppAutoInterop.BepInEx;
+using Il2CppAutoInterop.BepInEx.Extensions;
 using Il2CppAutoInterop.BepInEx.Processors;
 
 namespace Il2CppAutoInterop.Compiler;
@@ -13,17 +14,11 @@ internal static class Program
         }
 
         var inputPath = args[0];
+        var outputFilePath = Path.Combine(Path.GetDirectoryName(inputPath)!, "output.dll");
 
         Console.WriteLine($"Processing assembly: {inputPath}");
 
-        var interopProcessor = new BepInExIl2CppPluginProcessor(inputPath);
-        
-        interopProcessor.Dependencies.RegisterBepInExPlugin(inputPath);
-        
-        interopProcessor.Preload();
-        interopProcessor.Process();
-        
-        interopProcessor.IncrementAssemblyVersion();
-        interopProcessor.Save(inputPath);
+        var processor = new PluginProcessor(inputPath);
+        processor.Run(outputFilePath);
     }
 }

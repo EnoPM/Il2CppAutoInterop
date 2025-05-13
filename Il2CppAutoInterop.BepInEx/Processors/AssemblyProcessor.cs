@@ -1,16 +1,17 @@
 ﻿using Il2CppAutoInterop.BepInEx.Utils;
 using Il2CppAutoInterop.Cecil.Interfaces;
+using Il2CppAutoInterop.Core.Utils;
 using Mono.Cecil;
 
 namespace Il2CppAutoInterop.BepInEx.Processors;
 
-public sealed class BepInExAssemblyProcessor
+public sealed class AssemblyProcessor
 {
     public readonly AssemblyDefinition Assembly;
     public readonly IAssemblyLoaderContext Loader;
     public readonly DefinitionContext Definitions;
     
-    internal BepInExAssemblyProcessor(AssemblyDefinition assembly, IAssemblyLoaderContext loader)
+    internal AssemblyProcessor(AssemblyDefinition assembly, IAssemblyLoaderContext loader)
     {
         Assembly = assembly;
         Loader = loader;
@@ -24,13 +25,16 @@ public sealed class BepInExAssemblyProcessor
     {
         foreach (var module in Assembly.Modules)
         {
-            Process(module);
+            using (new TimedExecution($"Processing module {module.Name}", ConsoleColor.DarkCyan))
+            {
+                Process(module);
+            }
         }
     }
 
     private void Process(ModuleDefinition module)
     {
-        var processor = new BepInExModuleProcessor(this, module);
+        var processor = new ModuleProcessor(this, module);
         processor.Process();
     }
 }

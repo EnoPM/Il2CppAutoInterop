@@ -1,0 +1,4 @@
+<Project>
+    <Import Project="$(SolutionDir)\Common\BepInExCoreLibs.props" />
+    <Import Project="$(SolutionDir)\Common\BepInExInteropLibs.props" />
+</Project>

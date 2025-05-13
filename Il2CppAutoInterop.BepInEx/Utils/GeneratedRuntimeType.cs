@@ -11,7 +11,7 @@ public sealed class GeneratedRuntimeType
     public readonly TypeDefinition Definition;
     public readonly MethodDefinition PluginEntryPoint;
 
-    public GeneratedRuntimeType(BepInExModuleProcessor module)
+    public GeneratedRuntimeType(ModuleProcessor module)
     {
         RuntimeNamespace = string.Join('.', nameof(Il2CppAutoInterop), module.Module.Name, "Runtime");
 

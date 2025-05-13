@@ -1,6 +1,5 @@
 ﻿using Il2CppAutoInterop.BepInEx.Utils;
 using Il2CppAutoInterop.Cecil.Interfaces;
-using Il2CppAutoInterop.Dependency;
 
 namespace Il2CppAutoInterop.BepInEx.Extensions;
 

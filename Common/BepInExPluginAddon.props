@@ -1,0 +1,9 @@
+<Project>
+    <Import Project="$(SolutionDir)\Common\Environment.props" />
+    
+    <Target Name="CopyPluginToBepInExPluginsDirectory" AfterTargets="AfterBuild">
+        <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(UnityGameDirectory)\BepInEx\plugins" />
+    </Target>
+
+    <Import Project="$(SolutionDir)\Common\GameLibs.props" />
+</Project>
