@@ -1,15 +1,16 @@
 ﻿using Il2CppAutoInterop.BepInEx.Utils;
 using Il2CppAutoInterop.Cecil.Interfaces;
+using Il2CppAutoInterop.Core;
 using Il2CppAutoInterop.Core.Utils;
 using Mono.Cecil;
 
 namespace Il2CppAutoInterop.BepInEx.Processors;
 
-public sealed class AssemblyProcessor
+public sealed class AssemblyProcessor : IProcessor
 {
     public readonly AssemblyDefinition Assembly;
     public readonly IAssemblyLoaderContext Loader;
-    public readonly DefinitionContext Definitions;
+    public readonly ResolvedDefinitions Definitions;
     
     internal AssemblyProcessor(AssemblyDefinition assembly, IAssemblyLoaderContext loader)
     {
@@ -18,17 +19,14 @@ public sealed class AssemblyProcessor
         
         Loader.Dependencies.ProcessUnloadedDependenciesLoading();
 
-        Definitions = new DefinitionContext(loader, assembly.MainModule);
+        Definitions = new ResolvedDefinitions(loader, assembly.MainModule);
     }
 
     public void Process()
     {
         foreach (var module in Assembly.Modules)
         {
-            using (new TimedExecution($"Processing module {module.Name}", ConsoleColor.DarkCyan))
-            {
-                Process(module);
-            }
+            Process(module);
         }
     }
 

@@ -1,30 +1,28 @@
-﻿using Il2CppAutoInterop.BepInEx.Processors.MonoBehaviourComponents;
+﻿using Il2CppAutoInterop.BepInEx.Processors.TypeProcessors;
 using Il2CppAutoInterop.BepInEx.Utils;
+using Il2CppAutoInterop.Core;
 using Il2CppAutoInterop.Core.Utils;
 using Mono.Cecil;
 
 namespace Il2CppAutoInterop.BepInEx.Processors;
 
-public sealed class ModuleProcessor
+public sealed class ModuleProcessor : IProcessor
 {
     public readonly AssemblyProcessor AssemblyProcessor;
     public readonly ModuleDefinition Module;
-    public readonly GeneratedRuntimeType Runtime;
-    public DefinitionContext Definitions => AssemblyProcessor.Definitions;
+    public readonly GeneratedRuntimeManager Runtime;
+    public ResolvedDefinitions Definitions => AssemblyProcessor.Definitions;
 
     public ModuleProcessor(AssemblyProcessor assemblyProcessor, ModuleDefinition module)
     {
         AssemblyProcessor = assemblyProcessor;
         Module = module;
-        Runtime = new GeneratedRuntimeType(this);
+        Runtime = new GeneratedRuntimeManager(this);
     }
 
     public void Process()
     {
-        using (new TimedExecution($"Processing MonoBehaviour components for module {Module.Name}", ConsoleColor.DarkYellow))
-        {
-            ProcessMonoBehaviourTypes();
-        }
+        ProcessMonoBehaviourTypes();
     }
 
     private void ProcessMonoBehaviourTypes()
@@ -32,7 +30,7 @@ public sealed class ModuleProcessor
         var types = UnityUtility.GetMonoBehaviourTypes(Module, Definitions);
         foreach (var type in types)
         {
-            var processor = new MonoBehaviourComponentProcessor(this, type);
+            var processor = new MonoBehaviourProcessor(this, type);
             processor.Process();
         }
     }

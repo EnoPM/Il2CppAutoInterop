@@ -3,10 +3,11 @@ using Il2CppAutoInterop.BepInEx.Processors;
 using Il2CppAutoInterop.Cecil.Interfaces;
 using Il2CppAutoInterop.Core;
 using Il2CppAutoInterop.Core.Utils;
+using Il2CppAutoInterop.Logging;
 
 namespace Il2CppAutoInterop.BepInEx;
 
-public sealed class PluginProcessor
+public sealed class PluginProcessor : IProcessor
 {
     private readonly string _pluginAssemblyPath;
     private readonly IAssemblyLoaderContext _loader;
@@ -34,14 +35,14 @@ public sealed class PluginProcessor
             Preload();
         }
 
-        using (new TimedExecution($"Process {nameof(PluginProcessor)}", ConsoleColor.Magenta))
+        using (new TimedExecution($"Processing {_pluginAssemblyPath}", ConsoleColor.Magenta))
         {
             Process();
         }
         
         IncrementAssemblyVersion();
 
-        using (new TimedExecution("Saving changes to input assembly", ConsoleColor.Green))
+        using (new TimedExecution($"Saving changes to {outputFilePath}", ConsoleColor.Green))
         {
             Save(outputFilePath);
         }

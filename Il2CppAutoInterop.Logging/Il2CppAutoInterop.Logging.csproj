@@ -1,0 +1,11 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <Import Project="$(SolutionDir)\Common\Compatibility.props" />
+
+    <PropertyGroup>
+        <AssemblyVersion>0.0.1</AssemblyVersion>
+    </PropertyGroup>
+
+    <Import Project="$(SolutionDir)\Common\BepInExCoreAddon.props" />
+
+</Project>

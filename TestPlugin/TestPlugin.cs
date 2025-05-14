@@ -10,19 +10,32 @@ public class TestPlugin : BasePlugin
 {
     public override void Load()
     {
-        ClassInjector.RegisterTypeInIl2Cpp<MyMonoBehaviour>(new RegisterTypeOptions
-        {
-            Interfaces = new Il2CppInterfaceCollection([typeof(ISerializationCallbackReceiver)])
-        });
-
+        Register();
         var component = AddComponent<MyMonoBehaviour>();
 
         var casted = component.Cast<ISerializationCallbackReceiver>();
         System.Console.WriteLine($"Cast: {casted != null}");
     }
+
+    private static void Register()
+    {
+        ClassInjector.RegisterTypeInIl2Cpp(typeof(MyAncestorMonoBehaviour), new RegisterTypeOptions
+        {
+            Interfaces = new Il2CppInterfaceCollection(new Type[1] { typeof(ISerializationCallbackReceiver) })
+        });
+        ClassInjector.RegisterTypeInIl2Cpp<MyMonoBehaviour>(new RegisterTypeOptions
+        {
+            Interfaces = new Il2CppInterfaceCollection([typeof(ISerializationCallbackReceiver)])
+        });
+    }
 }
 
-public class MyMonoBehaviour : MonoBehaviour
+public abstract class MyAncestorMonoBehaviour : MonoBehaviour
+{
+    protected MyAncestorMonoBehaviour(IntPtr ptr) : base(ptr) {}
+}
+
+public class MyMonoBehaviour(IntPtr ptr) : MyAncestorMonoBehaviour(ptr)
 {
     public void OnBeforeSerialize()
     {

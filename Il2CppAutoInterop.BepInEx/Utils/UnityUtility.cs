@@ -6,7 +6,7 @@ namespace Il2CppAutoInterop.BepInEx.Utils;
 
 internal static class UnityUtility
 {
-    internal static List<TypeDefinition> GetMonoBehaviourTypes(ModuleDefinition module, DefinitionContext definitions)
+    internal static List<TypeDefinition> GetMonoBehaviourTypes(ModuleDefinition module, ResolvedDefinitions definitions)
     {
         var types = module.GetAllTypes()
             .Where(definitions.IsMonoBehaviour)
@@ -16,7 +16,7 @@ internal static class UnityUtility
         return sorter.Sort();
     }
 
-    internal static List<FieldDefinition> ResolveSerializedFields(TypeDefinition type, DefinitionContext definitions)
+    internal static List<FieldDefinition> GetSerializedFields(TypeDefinition type, ResolvedDefinitions definitions)
     {
         return type.Fields
             .Where(definitions.IsSerializedField)
@@ -28,7 +28,7 @@ internal static class UnityUtility
         return [type.BaseType.Resolve()];
     }
     
-    private static bool IsSerializedField(this DefinitionContext definitions, FieldDefinition field)
+    private static bool IsSerializedField(this ResolvedDefinitions definitions, FieldDefinition field)
     {
         if (field.IsLiteral || field.IsStatic || field.IsFamilyOrAssembly || field.IsInitOnly) return false;
         if (field.HasCustomAttributes)
@@ -45,7 +45,7 @@ internal static class UnityUtility
         return field.IsPublic;
     }
 
-    private static bool IsMonoBehaviour(this DefinitionContext definitions, TypeDefinition type)
+    private static bool IsMonoBehaviour(this ResolvedDefinitions definitions, TypeDefinition type)
     {
         return type.IsAssignableTo(definitions.MonoBehaviour);
     }

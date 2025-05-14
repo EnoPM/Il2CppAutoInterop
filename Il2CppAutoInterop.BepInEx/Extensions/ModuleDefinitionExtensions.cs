@@ -7,7 +7,7 @@ namespace Il2CppAutoInterop.BepInEx.Extensions;
 public static class ModuleDefinitionExtensions
 {
     public static MethodDefinition? GetBepInExPluginEntryPointMethod(this ModuleDefinition module,
-        DefinitionContext types)
+        ResolvedDefinitions types)
     {
         var type = module.GetAllTypes()
             .FirstOrDefault(x => x.IsAssignableTo(types.BepInExBasePlugin));

@@ -1,10 +1,13 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using Il2CppAutoInterop.Logging;
 using Mono.Cecil;
 
 namespace Il2CppAutoInterop.Cecil.Extensions;
 
 public static class TypeDefinitionExtensions
 {
+    private static readonly HashSet<string> UnresolvedWarnedAncestors = [];
+    
     public static bool TryFindNestedType(
         this TypeDefinition type,
         string fullName,
@@ -42,14 +45,23 @@ public static class TypeDefinitionExtensions
                 return true;
             }
 
-            var ancestor = source.BaseType.Resolve();
-            if (ancestor == null)
+            try
             {
-                Console.WriteLine($"Unable to resolve ancestor type {source.FullName}");
+                var ancestor = source.BaseType.Resolve();
+                if (ancestor == null)
+                {
+                    return false;
+                }
+                source = ancestor;
+            }
+            catch (Exception ex)
+            {
+                if (UnresolvedWarnedAncestors.Add(source.BaseType.FullName))
+                {
+                    Logger.Instance.Warning($"Unresolvable ancestor type '{source.BaseType.FullName}'. {ex.Message}");
+                }
                 return false;
             }
-
-            source = ancestor;
         }
 
         return source.BaseType != null && source.BaseType.FullName == target.FullName;
@@ -78,7 +90,18 @@ public static class TypeDefinitionExtensions
                 return false;
             }
 
-            baseType = baseType.BaseType.Resolve();
+            try
+            {
+                baseType = baseType.BaseType.Resolve();
+            }
+            catch (Exception ex)
+            {
+                if (UnresolvedWarnedAncestors.Add(baseType.BaseType.FullName))
+                {
+                    Logger.Instance.Warning($"Unresolvable ancestor type '{baseType.BaseType.FullName}'. {ex.Message}");
+                }
+                baseType = null;
+            }
         }
 
         method = null;

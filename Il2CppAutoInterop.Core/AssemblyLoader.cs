@@ -24,8 +24,6 @@ public sealed class AssemblyLoader : IAssemblyLoaderContext
         };
     }
 
-    public void ProcessUnloadedDependenciesLoading() => Dependencies.ProcessUnloadedDependenciesLoading();
-
     public AssemblyDefinition? ResolveAssembly(AssemblyNameReference assemblyName)
     {
         if (!assemblyName.TryResolveAssemblyName(out var name))
@@ -34,7 +32,7 @@ public sealed class AssemblyLoader : IAssemblyLoaderContext
             return null;
         }
 
-        return Dependencies.FindLoadedAssembly(assemblyName);
+        return Dependencies.FindLoadedAssembly(name);
     }
 
     public AssemblyDefinition Load(string assemblyPath)

@@ -1,5 +1,7 @@
-﻿using Il2CppAutoInterop.Cecil.Extensions;
+﻿using System.Reflection;
+using Il2CppAutoInterop.Cecil.Extensions;
 using Il2CppAutoInterop.Cecil.Interfaces;
+using Il2CppAutoInterop.Logging;
 using Mono.Cecil;
 
 namespace Il2CppAutoInterop.Core;
@@ -33,7 +35,7 @@ public sealed class AssemblyDependencyManager(AssemblyLoader loader) : IAssembly
         }
     }
 
-    public AssemblyDefinition? FindLoadedAssembly(AssemblyNameReference assemblyName)
+    public AssemblyDefinition? FindLoadedAssembly(AssemblyName assemblyName)
     {
         foreach (var dependency in Files)
         {

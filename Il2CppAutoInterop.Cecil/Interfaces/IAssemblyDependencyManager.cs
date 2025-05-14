@@ -1,4 +1,5 @@
-﻿using Mono.Cecil;
+﻿using System.Reflection;
+using Mono.Cecil;
 
 namespace Il2CppAutoInterop.Cecil.Interfaces;
 
@@ -9,6 +10,6 @@ public interface IAssemblyDependencyManager
     
     public void ProcessUnloadedDependenciesLoading();
     
-    public AssemblyDefinition? FindLoadedAssembly(AssemblyNameReference assemblyName);
+    public AssemblyDefinition? FindLoadedAssembly(AssemblyName assemblyName);
     public TypeDefinition? FindLoadedType(string typeFullName, in List<string> excludedFiles);
 }

@@ -1,6 +1,7 @@
 ﻿using Il2CppAutoInterop.BepInEx;
 using Il2CppAutoInterop.BepInEx.Extensions;
 using Il2CppAutoInterop.BepInEx.Processors;
+using Il2CppAutoInterop.Logging;
 
 namespace Il2CppAutoInterop.Compiler;
 
@@ -16,7 +17,7 @@ internal static class Program
         var inputPath = args[0];
         var outputFilePath = Path.Combine(Path.GetDirectoryName(inputPath)!, "output.dll");
 
-        Console.WriteLine($"Processing assembly: {inputPath}");
+        Logger.Instance.Info($"Processing assembly: {inputPath}");
 
         var processor = new PluginProcessor(inputPath);
         processor.Run(outputFilePath);
