@@ -9,6 +9,7 @@ namespace Il2CppAutoInterop.BepInEx;
 
 public sealed class PluginProcessor : IProcessor
 {
+    private readonly string _bepInExDirectoryPath;
     private readonly string _pluginAssemblyPath;
     private readonly IAssemblyLoaderContext _loader;
     private AssemblyProcessor? _processor;
@@ -17,8 +18,9 @@ public sealed class PluginProcessor : IProcessor
     
     public string? UnityProjectDirectory { get; set; }
     
-    public PluginProcessor(string pluginAssemblyPath)
+    public PluginProcessor(string bepInExDirectoryPath, string pluginAssemblyPath)
     {
+        _bepInExDirectoryPath = bepInExDirectoryPath;
         _pluginAssemblyPath = pluginAssemblyPath;
         _loader = new AssemblyLoader();
     }
@@ -29,7 +31,7 @@ public sealed class PluginProcessor : IProcessor
     {
         using (new TimedExecution("Register BepInEx plugin dependencies"))
         {
-            Dependencies.RegisterBepInExPlugin(_pluginAssemblyPath);
+            Dependencies.RegisterBepInExPlugin(_bepInExDirectoryPath, _pluginAssemblyPath);
         }
 
         using (new TimedExecution($"Preloading dependencies for assembly {Path.GetFileName(_pluginAssemblyPath)}", ConsoleColor.Yellow))

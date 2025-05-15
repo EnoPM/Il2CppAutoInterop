@@ -3,7 +3,7 @@
 internal static class BepInExUtility
 {
     private const string BepInExDirectoryName = "BepInEx";
-    internal static readonly string[] Directories = ["core", "plugins", "interop", "patchers", "dotnet"];
+    internal static readonly string[] Directories = ["core", "plugins", "interop", "patchers"];
     
     internal static string FindBepInExDirectoryFromChildPath(string path)
     {

@@ -1,5 +1,4 @@
 ﻿using Il2CppAutoInterop.BepInEx.Utils;
-using Il2CppAutoInterop.Cecil.Extensions;
 using Il2CppAutoInterop.Core;
 using Il2CppAutoInterop.Core.Utils;
 using Mono.Cecil;

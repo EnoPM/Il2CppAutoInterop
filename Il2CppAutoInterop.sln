@@ -1,14 +1,10 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Il2CppAutoInterop", "Il2CppAutoInterop\Il2CppAutoInterop.csproj", "{E5AE78B8-6F78-4EC9-BFBD-AFDF999E59E3}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Il2CppAutoInterop.Compiler", "Il2CppAutoInterop.Compiler\Il2CppAutoInterop.Compiler.csproj", "{AF33833B-B13D-4709-9CCA-6B72040CE2B4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Il2CppAutoInterop.PostCompiler", "Il2CppAutoInterop.PostCompiler\Il2CppAutoInterop.PostCompiler.csproj", "{AF33833B-B13D-4709-9CCA-6B72040CE2B4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Il2CppAutoInterop.Cecil", "Il2CppAutoInterop.Cecil\Il2CppAutoInterop.Cecil.csproj", "{F18B1713-FA1E-4162-9FC1-454C70060459}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Il2CppAutoInterop.Core", "Il2CppAutoInterop.Core\Il2CppAutoInterop.Core.csproj", "{B39F83E6-B295-4C22-B2DF-0FBA026B5E0A}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Il2CppAutoInterop.Reflection", "Il2CppAutoInterop.Reflection\Il2CppAutoInterop.Reflection.csproj", "{95AAEE9F-B3DE-4B43-B505-440E7276781F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Il2CppAutoInterop.BepInEx", "Il2CppAutoInterop.BepInEx\Il2CppAutoInterop.BepInEx.csproj", "{F47DB879-42D4-4877-98BA-5CCEEEF41B1A}"
 EndProject
@@ -16,7 +12,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestPlugin", "TestPlugin\Te
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Il2CppAutoInterop.Logging", "Il2CppAutoInterop.Logging\Il2CppAutoInterop.Logging.csproj", "{6563DCD3-9503-4C3B-922F-0B8C443E3D4D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Il2CppAutoInterop.CSharp", "Il2CppAutoInterop.CSharp\Il2CppAutoInterop.CSharp.csproj", "{6D8A8EE9-DE42-4023-917A-A9F7081EFCFD}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{1B135A89-FF4F-42EC-9625-573AA9B35D1F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Demo", "Demo", "{5C3E3EF9-FC2C-47DB-9571-BCA34E6B048A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BepInEx", "BepInEx", "{52043952-7EC8-49DD-98FD-355426F064A0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -24,10 +24,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{E5AE78B8-6F78-4EC9-BFBD-AFDF999E59E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E5AE78B8-6F78-4EC9-BFBD-AFDF999E59E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E5AE78B8-6F78-4EC9-BFBD-AFDF999E59E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E5AE78B8-6F78-4EC9-BFBD-AFDF999E59E3}.Release|Any CPU.Build.0 = Release|Any CPU
 		{AF33833B-B13D-4709-9CCA-6B72040CE2B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{AF33833B-B13D-4709-9CCA-6B72040CE2B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AF33833B-B13D-4709-9CCA-6B72040CE2B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -40,10 +36,6 @@ Global
 		{B39F83E6-B295-4C22-B2DF-0FBA026B5E0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B39F83E6-B295-4C22-B2DF-0FBA026B5E0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B39F83E6-B295-4C22-B2DF-0FBA026B5E0A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{95AAEE9F-B3DE-4B43-B505-440E7276781F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{95AAEE9F-B3DE-4B43-B505-440E7276781F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{95AAEE9F-B3DE-4B43-B505-440E7276781F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{95AAEE9F-B3DE-4B43-B505-440E7276781F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F47DB879-42D4-4877-98BA-5CCEEEF41B1A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F47DB879-42D4-4877-98BA-5CCEEEF41B1A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F47DB879-42D4-4877-98BA-5CCEEEF41B1A}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -56,9 +48,12 @@ Global
 		{6563DCD3-9503-4C3B-922F-0B8C443E3D4D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6563DCD3-9503-4C3B-922F-0B8C443E3D4D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6563DCD3-9503-4C3B-922F-0B8C443E3D4D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6D8A8EE9-DE42-4023-917A-A9F7081EFCFD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6D8A8EE9-DE42-4023-917A-A9F7081EFCFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6D8A8EE9-DE42-4023-917A-A9F7081EFCFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6D8A8EE9-DE42-4023-917A-A9F7081EFCFD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{6563DCD3-9503-4C3B-922F-0B8C443E3D4D} = {1B135A89-FF4F-42EC-9625-573AA9B35D1F}
+		{F18B1713-FA1E-4162-9FC1-454C70060459} = {1B135A89-FF4F-42EC-9625-573AA9B35D1F}
+		{B0ECABB9-D3F2-4E49-AFD8-1D09BB019E14} = {5C3E3EF9-FC2C-47DB-9571-BCA34E6B048A}
+		{F47DB879-42D4-4877-98BA-5CCEEEF41B1A} = {52043952-7EC8-49DD-98FD-355426F064A0}
+		{AF33833B-B13D-4709-9CCA-6B72040CE2B4} = {52043952-7EC8-49DD-98FD-355426F064A0}
 	EndGlobalSection
 EndGlobal

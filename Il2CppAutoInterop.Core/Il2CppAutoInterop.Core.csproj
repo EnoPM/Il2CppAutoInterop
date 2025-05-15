@@ -8,7 +8,6 @@
 
     <ItemGroup>
         <ProjectReference Include="..\Il2CppAutoInterop.Cecil\Il2CppAutoInterop.Cecil.csproj" />
-        <ProjectReference Include="..\Il2CppAutoInterop.Reflection\Il2CppAutoInterop.Reflection.csproj" />
     </ItemGroup>
 
     <Import Project="$(SolutionDir)\Common\BepInExCoreAddon.props" />
