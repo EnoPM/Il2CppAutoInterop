@@ -2,10 +2,4 @@
     <PropertyGroup>
         <AssemblyName>EnoPM.$(AssemblyName)</AssemblyName>
     </PropertyGroup>
-
-    <Import Project="$(SolutionDir)\Common\Environment.props" />
-    
-    <Target Name="CopyLibraryToBepInExCoreDirectory" AfterTargets="AfterBuild">
-        <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(UnityGameDirectory)\BepInEx\core" />
-    </Target>
 </Project>
