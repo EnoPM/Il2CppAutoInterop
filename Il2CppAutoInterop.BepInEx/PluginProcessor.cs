@@ -15,6 +15,8 @@ public sealed class PluginProcessor : IProcessor
 
     public IAssemblyDependencyManager Dependencies => _loader.Dependencies;
     
+    public string? UnityProjectDirectory { get; set; }
+    
     public PluginProcessor(string pluginAssemblyPath)
     {
         _pluginAssemblyPath = pluginAssemblyPath;
@@ -53,7 +55,7 @@ public sealed class PluginProcessor : IProcessor
     public void Preload()
     {
         var mainAssembly = _loader.Load(_pluginAssemblyPath);
-        _processor = new AssemblyProcessor(mainAssembly, _loader);
+        _processor = new AssemblyProcessor(this, mainAssembly, _loader);
     }
 
     public void Process()
@@ -74,7 +76,7 @@ public sealed class PluginProcessor : IProcessor
         _processor.Assembly.Write(destinationFilePath);
     }
 
-    private void RandomizeAssemblyVersion()
+    public void RandomizeAssemblyVersion()
     {
         if (_processor == null)
         {

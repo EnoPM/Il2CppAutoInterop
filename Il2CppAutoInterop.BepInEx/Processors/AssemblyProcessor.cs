@@ -11,9 +11,11 @@ public sealed class AssemblyProcessor : IProcessor
     public readonly AssemblyDefinition Assembly;
     public readonly IAssemblyLoaderContext Loader;
     public readonly ResolvedDefinitions Definitions;
+    public readonly PluginProcessor PluginProcessor;
     
-    internal AssemblyProcessor(AssemblyDefinition assembly, IAssemblyLoaderContext loader)
+    internal AssemblyProcessor(PluginProcessor pluginProcessor, AssemblyDefinition assembly, IAssemblyLoaderContext loader)
     {
+        PluginProcessor = pluginProcessor;
         Assembly = assembly;
         Loader = loader;
         

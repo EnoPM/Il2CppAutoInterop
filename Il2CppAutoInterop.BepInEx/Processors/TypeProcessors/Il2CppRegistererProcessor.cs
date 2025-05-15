@@ -1,6 +1,7 @@
 ﻿using Il2CppAutoInterop.BepInEx.Utils;
 using Il2CppAutoInterop.Cecil.Extensions;
 using Il2CppAutoInterop.Core;
+using Il2CppAutoInterop.Core.Utils;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 
@@ -23,6 +24,16 @@ public sealed class Il2CppRegistererProcessor : IProcessor
     }
 
 
+    private OptionalDefinition<MethodDefinition> GetBaseRegisterer()
+    {
+        if (!MonoBehaviourProcessor.UseUnitySerializationInterface || SerializedMonoBehaviourProcessor.SerializedFields.Count == 0)
+        {
+            return Runtime.BasicComponentRegistererMethod;
+        }
+
+        return Runtime.AdvancedComponentRegistererMethod;
+    }
+
     public void Process()
     {
         var classLoader = Runtime.ComponentRegistererMethod.Definition;
@@ -30,12 +41,10 @@ public sealed class Il2CppRegistererProcessor : IProcessor
         
         var ret = il.Body.Instructions.First(x => x.OpCode == OpCodes.Ret);
 
-        var baseRegisterer = SerializedMonoBehaviourProcessor.SerializedFields.Count == 0
-            ? Runtime.BasicComponentRegistererMethod
-            : Runtime.AdvancedComponentRegistererMethod;
-        
+        var baseRegisterer = GetBaseRegisterer();
         var registerer = new GenericInstanceMethod(Module.ImportReference(baseRegisterer.Definition));
         registerer.GenericArguments.Add(MonoBehaviourProcessor.ComponentType);
+        
         il.InsertBefore(ret, il.Create(OpCodes.Call, registerer));
     }
 }

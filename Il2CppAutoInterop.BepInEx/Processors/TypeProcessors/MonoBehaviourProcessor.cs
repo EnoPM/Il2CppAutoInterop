@@ -9,6 +9,9 @@ public sealed class MonoBehaviourProcessor : IProcessor
     public readonly TypeDefinition ComponentType;
 
     public ResolvedDefinitions Definitions => ModuleProcessor.Definitions;
+    
+    // TODO: Investigate ISerializationCallbackReceiver.OnAfterDeserialize implementation instead of deserialize in Awake method
+    public bool UseUnitySerializationInterface { get; set; } = false;
 
     public MonoBehaviourProcessor(ModuleProcessor moduleProcessor, TypeDefinition componentType)
     {
@@ -19,7 +22,7 @@ public sealed class MonoBehaviourProcessor : IProcessor
     public void Process()
     {
         var serialization = ProcessSerializedMonoBehaviour();
-        ProcessUnsupportedMembersInIl2Cpp();
+        ProcessUnsupportedIl2CppMembers();
         ProcessAbstractMonoBehaviour();
         ProcessIntPtrConstructor();
         ProcessIl2CppRegisterer(serialization);
@@ -33,7 +36,7 @@ public sealed class MonoBehaviourProcessor : IProcessor
         return processor;
     }
 
-    private void ProcessUnsupportedMembersInIl2Cpp()
+    private void ProcessUnsupportedIl2CppMembers()
     {
         var processor = new UnsupportedIl2CppTypeMemberProcessor(this);
         processor.Process();

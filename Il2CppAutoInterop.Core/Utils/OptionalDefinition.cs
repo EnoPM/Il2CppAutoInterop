@@ -24,5 +24,11 @@ public sealed class OptionalDefinition<T> where T : notnull
         return _cache;
     }
 
+    public void Create()
+    {
+        if (_cache != null) return;
+        CreateCache();
+    }
+
     public T Definition => _cache ?? CreateCache();
 }

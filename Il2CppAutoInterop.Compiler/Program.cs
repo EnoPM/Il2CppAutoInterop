@@ -15,11 +15,10 @@ internal static class Program
         }
 
         var inputPath = args[0];
-        var outputFilePath = Path.Combine(Path.GetDirectoryName(inputPath)!, "output.dll");
+        var outputFilePath = args.Length > 1 ? args[1] : inputPath;
 
         Logger.Instance.Info($"Processing assembly: {inputPath}");
-
-        var processor = new PluginProcessor(inputPath);
-        processor.Run(outputFilePath);
+        
+        BepInExIl2CppInterop.MakeInterop(inputPath, outputFilePath);
     }
 }
