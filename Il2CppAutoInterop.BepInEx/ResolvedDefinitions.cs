@@ -44,10 +44,13 @@ public sealed class ResolvedDefinitions : BaseDefinitionResolver
     [CecilResolve("System.Void Il2CppInterop.Runtime.Injection.ClassInjector::RegisterTypeInIl2Cpp()", ResolverContext.Referenced)]
     internal MethodDefinition SimpleRegisterTypeInIl2CppMethod { get; private set; } = null!;
     
-    [CecilResolve("System.Void Il2CppInterop.Runtime.Injection.ClassInjector::RegisterTypeInIl2Cpp(System.Type,Il2CppInterop.Runtime.Injection.RegisterTypeOptions)", ResolverContext.Referenced)]
+    [CecilResolve("System.Void Il2CppInterop.Runtime.Injection.ClassInjector::RegisterTypeInIl2Cpp(Il2CppInterop.Runtime.Injection.RegisterTypeOptions)", ResolverContext.Referenced)]
     internal MethodDefinition RegisterTypeInIl2CppWithOptionsMethod { get; private set; } = null!;
     
-    [CecilResolve("System.Void Il2CppInterop.Runtime.Injection.RegisterTypeOptions::.ctor()", ResolverContext.Referenced)]
+    [CecilResolve("Il2CppInterop.Runtime.Injection.RegisterTypeOptions", ResolverContext.Referenced)]
+    internal TypeDefinition ClassInjectorRegisterOptionsType { get; set; } = null!;
+    
+    [CecilResolve("System.Void Il2CppInterop.Runtime.Injection.RegisterTypeOptions::.ctor()", ResolverContext.Referenceable)]
     internal MethodDefinition ClassInjectorRegisterOptionsConstructor { get; set; } = null!;
 
     [CecilResolve("UnityEngine.ISerializationCallbackReceiver", ResolverContext.Referenced)]
@@ -64,12 +67,8 @@ public sealed class ResolvedDefinitions : BaseDefinitionResolver
     
     [CecilResolve("System.Void Il2CppInterop.Runtime.Injection.Il2CppInterfaceCollection::.ctor(System.Collections.Generic.IEnumerable`1<System.Type>)", ResolverContext.Referenceable)]
     internal MethodDefinition Il2CppInterfaceCollectionConstructor { get; set; } = null!;
-    
-    [CecilResolve("System.Void <>z__ReadOnlySingleElementList`1::.ctor(T)")]
-    internal MethodDefinition ReadOnlySingleElementListConstructor { get; private set; } = null!;
 
     internal ResolvedDefinitions(IAssemblyLoaderContext loader, ModuleDefinition mainModule) : base(loader, mainModule)
     {
-        Logger.Instance.Warning(Il2CppInterfaceCollectionSetInterfaceMethod.FullName);
     }
 }

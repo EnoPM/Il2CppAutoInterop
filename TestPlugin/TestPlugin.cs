@@ -19,7 +19,7 @@ public class TestPlugin : BasePlugin
 
     private static void Register()
     {
-        ClassInjector.RegisterTypeInIl2Cpp(typeof(MyAncestorMonoBehaviour), new RegisterTypeOptions
+        ClassInjector.RegisterTypeInIl2Cpp<MyAncestorMonoBehaviour>(new RegisterTypeOptions
         {
             Interfaces = new Il2CppInterfaceCollection(new Type[1] { typeof(ISerializationCallbackReceiver) })
         });
@@ -27,6 +27,11 @@ public class TestPlugin : BasePlugin
         {
             Interfaces = new Il2CppInterfaceCollection([typeof(ISerializationCallbackReceiver)])
         });
+    }
+
+    internal static void Register<T>() where T : MonoBehaviour
+    {
+        ClassInjector.RegisterTypeInIl2Cpp<T>();
     }
 }
 

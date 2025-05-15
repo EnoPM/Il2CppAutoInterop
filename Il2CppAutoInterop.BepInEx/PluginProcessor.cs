@@ -40,7 +40,9 @@ public sealed class PluginProcessor : IProcessor
             Process();
         }
         
-        IncrementAssemblyVersion();
+        #if DEBUG
+        RandomizeAssemblyVersion();
+        #endif
 
         using (new TimedExecution($"Saving changes to {outputFilePath}", ConsoleColor.Green))
         {
@@ -71,15 +73,17 @@ public sealed class PluginProcessor : IProcessor
         }
         _processor.Assembly.Write(destinationFilePath);
     }
-    
-    public void IncrementAssemblyVersion()
+
+    private void RandomizeAssemblyVersion()
     {
         if (_processor == null)
         {
             throw new InvalidOperationException($"Assembly {_pluginAssemblyPath} is not yet loaded");
         }
+
+        var random = new Random();
         var v = _processor.Assembly.Name.Version;
-        var version = new Version(v.Major, v.Minor, v.Build, v.Revision + 1);
+        var version = new Version(v.Major, v.Minor, v.Build, random.Next(10000, 99999));
         _processor.Assembly.Name.Version = version;
     }
 }

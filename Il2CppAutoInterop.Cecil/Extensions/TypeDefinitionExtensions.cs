@@ -58,7 +58,7 @@ public static class TypeDefinitionExtensions
             {
                 if (UnresolvedWarnedAncestors.Add(source.BaseType.FullName))
                 {
-                    Logger.Instance.Warning($"Unresolvable ancestor type '{source.BaseType.FullName}'. {ex.Message}");
+                    Logger.Instance.Warning($"[2]Unresolvable ancestor type '{source.BaseType.FullName}'. {ex.Message}");
                 }
                 return false;
             }
@@ -98,7 +98,7 @@ public static class TypeDefinitionExtensions
             {
                 if (UnresolvedWarnedAncestors.Add(baseType.BaseType.FullName))
                 {
-                    Logger.Instance.Warning($"Unresolvable ancestor type '{baseType.BaseType.FullName}'. {ex.Message}");
+                    Logger.Instance.Warning($"[1]Unresolvable ancestor type '{baseType.BaseType.FullName}'. {ex.Message}");
                 }
                 baseType = null;
             }

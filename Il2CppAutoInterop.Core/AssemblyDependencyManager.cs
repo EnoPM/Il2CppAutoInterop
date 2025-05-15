@@ -40,7 +40,7 @@ public sealed class AssemblyDependencyManager(AssemblyLoader loader) : IAssembly
         foreach (var dependency in Files)
         {
             var assembly = dependency.LoadedAssembly;
-            if (assembly != null && dependency.IsAvailable && assembly.FullName == assemblyName.FullName)
+            if (assembly != null && dependency.IsAvailable && assembly.Name.Name == assemblyName.Name)
             {
                 return assembly;
             }
