@@ -1,5 +1,5 @@
-﻿using Il2CppAutoInterop.BepInEx;
-using Il2CppAutoInterop.Logging;
+﻿using CommandLine;
+using Il2CppAutoInterop.BepInEx;
 
 namespace Il2CppAutoInterop.PostCompiler;
 
@@ -7,25 +7,19 @@ internal static class Program
 {
     private static void Main(string[] args)
     {
-        if (args.Length < 2)
+        var result = Parser.Default
+            .ParseArguments<PostCompilerOptions>(args)
+            .WithParsed(BepInExIl2CppInterop.Run)
+            .WithNotParsed(HandleArgumentErrors);
+        
+        Console.WriteLine($"Parser result: {result.Tag.ToString()}");
+    }
+
+    private static void HandleArgumentErrors(IEnumerable<Error> errors)
+    {
+        foreach (var error in errors)
         {
-            throw new ArgumentException("Please specify the BepInEx directory path and an assembly path to load");
+            Console.Error.WriteLine($"Error: {error.Tag.ToString()}");
         }
-
-        var bepInExDirectoryPath = args[0];
-        var inputPath = args[1];
-        var outputFilePath = args.Length > 2 ? args[2] : null;
-        var unityProjectDirectoryPath = args.Length > 3 ? args[3] : null;
-
-        Logger.Instance.Info($"Processing assembly: {inputPath}");
-
-        var config = new BepInExIl2CppInterop.Config(
-            bepInExDirectoryPath,
-            inputPath,
-            outputFilePath,
-            unityProjectDirectoryPath
-        );
-
-        BepInExIl2CppInterop.MakeInterop(config);
     }
 }

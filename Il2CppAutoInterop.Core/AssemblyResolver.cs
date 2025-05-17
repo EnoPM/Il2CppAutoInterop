@@ -5,9 +5,9 @@ namespace Il2CppAutoInterop.Core;
 
 public sealed class AssemblyResolver : DefaultAssemblyResolver
 {
-    private readonly IAssemblyLoaderContext _context;
+    private readonly IAssemblyLoader _context;
 
-    public AssemblyResolver(IAssemblyLoaderContext context)
+    public AssemblyResolver(IAssemblyLoader context)
     {
         _context = context;
 

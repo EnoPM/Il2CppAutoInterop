@@ -23,7 +23,7 @@ internal static class BepInExUtility
             path = parent;
         }
 
-        throw new DirectoryNotFoundException(path);
+        throw new DirectoryNotFoundException($"Unable to find BepInEx directory from child '{path}'");
     }
     
     private static string[] GetBepInExDirectoriesAbsolutePaths(string basePath)

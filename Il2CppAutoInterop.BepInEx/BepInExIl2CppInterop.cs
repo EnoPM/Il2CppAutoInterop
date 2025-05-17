@@ -1,36 +1,37 @@
-﻿namespace Il2CppAutoInterop.BepInEx;
+﻿using Il2CppAutoInterop.BepInEx.Contexts;
+using Il2CppAutoInterop.BepInEx.Interfaces;
+using Il2CppAutoInterop.BepInEx.Processors.FileProcessors;
+
+namespace Il2CppAutoInterop.BepInEx;
 
 public static class BepInExIl2CppInterop
 {
-    public static void MakeInterop(Config config)
+    public static void Run(IBepInExIl2CppInteropOptions options)
     {
-        var processor = new PluginProcessor(config.BepInExDirectoryPath, config.InputPath)
+        var commonContext = new PostProcessingContext(options);
+        foreach (var assemblyFilePath in options.InputFilePaths)
         {
-            UnityProjectDirectory = config.UnityProjectDirectoryPath
-        };
-        if (config.OutputPath != null)
-        {
-            processor.Run(config.OutputPath);
-        }
-        else
-        {
-            processor.Run();
-        }
-    }
-
-    public class Config
-    {
-        internal readonly string BepInExDirectoryPath;
-        internal readonly string InputPath;
-        internal readonly string? OutputPath;
-        internal readonly string? UnityProjectDirectoryPath;
-
-        public Config(string bepInExDirectoryPath, string inputPath, string? outputPath = null, string? unityProjectDirectoryPath = null)
-        {
-            BepInExDirectoryPath = bepInExDirectoryPath;
-            InputPath = inputPath;
-            OutputPath = outputPath;
-            UnityProjectDirectoryPath = unityProjectDirectoryPath;
+            var context = new BepInExPluginFileContext(commonContext, assemblyFilePath);
+            var processor = new BepInExFileProcessor(context);
+            processor.Load();
+            processor.Process();
+            if (options.UseVersionRandomizer)
+            {
+                processor.RandomizeAssemblyVersion();
+            }
+            if (options.OutputDirectoryPath == null)
+            {
+                var directoryPath = Path.GetDirectoryName(assemblyFilePath);
+                if (directoryPath == null)
+                {
+                    throw new Exception($"Unable to get directory path for {assemblyFilePath}");
+                }
+                processor.Save(directoryPath);
+            }
+            else
+            {
+                processor.Save(options.OutputDirectoryPath);
+            }
         }
     }
 }

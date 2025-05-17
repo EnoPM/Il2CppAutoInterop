@@ -5,7 +5,7 @@ using Mono.Cecil;
 
 namespace Il2CppAutoInterop.Core;
 
-public sealed class AssemblyLoader : IAssemblyLoaderContext
+public sealed class AssemblyLoader : IAssemblyLoader
 {
     public IAssemblyDependencyManager Dependencies { get; }
     private readonly AssemblyLoader? _parent;
@@ -44,6 +44,8 @@ public sealed class AssemblyLoader : IAssemblyLoaderContext
     {
         return AssemblyDefinition.ReadAssembly(assemblyStream, _readerParameters);
     }
+
+    public void LoadDependencies() => Dependencies.LoadAllFiles();
 
     public bool TryResolveUnreferenced(
         ModuleDefinition module,

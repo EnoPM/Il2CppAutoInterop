@@ -1,5 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using Il2CppAutoInterop.Logging;
+using Il2CppAutoInterop.Cecil.Utils;
+using Il2CppAutoInterop.Common;
+using Il2CppAutoInterop.Common.Logging;
 using Mono.Cecil;
 
 namespace Il2CppAutoInterop.Cecil.Extensions;
@@ -28,19 +30,34 @@ public static class TypeDefinitionExtensions
         result = null;
         return false;
     }
+    
+    public static bool IsAssignableFrom(this TypeDefinition source, LoadableType target)
+    {
+        return target.Value.IsAssignableFrom(source);
+    }
 
     public static bool IsAssignableFrom(this TypeDefinition source, TypeDefinition target) => target.IsAssignableTo(source);
-
+    
+    public static bool IsAssignableTo(this TypeDefinition source, LoadableType target)
+    {
+        return source.IsAssignableTo(target.FullName);
+    }
+    
     public static bool IsAssignableTo(this TypeDefinition source, TypeDefinition target)
     {
-        while (source.BaseType != null && source.BaseType.FullName != target.FullName)
+        return source.IsAssignableTo(target.FullName);
+    }
+
+    private static bool IsAssignableTo(this TypeDefinition source, string targetTypeFullName)
+    {
+        while (source.BaseType != null && source.BaseType.FullName != targetTypeFullName)
         {
             if (source.BaseType == null)
             {
                 return false;
             }
 
-            if (source.BaseType.FullName == target.FullName)
+            if (source.BaseType.FullName == targetTypeFullName)
             {
                 return true;
             }
@@ -64,7 +81,7 @@ public static class TypeDefinitionExtensions
             }
         }
 
-        return source.BaseType != null && source.BaseType.FullName == target.FullName;
+        return source.BaseType != null && source.BaseType.FullName == targetTypeFullName;
     }
 
     public static bool TryFindNearestMethod(

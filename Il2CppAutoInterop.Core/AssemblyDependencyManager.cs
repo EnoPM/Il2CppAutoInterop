@@ -1,14 +1,13 @@
 ﻿using System.Reflection;
 using Il2CppAutoInterop.Cecil.Extensions;
 using Il2CppAutoInterop.Cecil.Interfaces;
-using Il2CppAutoInterop.Logging;
 using Mono.Cecil;
 
 namespace Il2CppAutoInterop.Core;
 
 public sealed class AssemblyDependencyManager(AssemblyLoader loader) : IAssemblyDependencyManager
 {
-    internal readonly List<DependencyFile> Files = [];
+    public IList<IDependencyFile> Files { get; } = new List<IDependencyFile>();
 
     public void AddFile(params string[] files)
     {
@@ -26,12 +25,12 @@ public sealed class AssemblyDependencyManager(AssemblyLoader loader) : IAssembly
         }
     }
 
-    public void ProcessUnloadedDependenciesLoading()
+    public void LoadAllFiles()
     {
         foreach (var dependency in Files)
         {
             if (dependency.IsLoaded || !dependency.CanBeLoaded) continue;
-            dependency.Load();
+            dependency.Load(loader);
         }
     }
 
@@ -71,7 +70,7 @@ public sealed class AssemblyDependencyManager(AssemblyLoader loader) : IAssembly
                 throw new ArgumentException($"File {filePath} already added as dependency");
             }
 
-            var file = new DependencyFile(loader, filePath);
+            var file = new DependencyFile(filePath);
             Files.Add(file);
             existingPaths.Add(file.Path);
         }

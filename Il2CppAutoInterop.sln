@@ -10,7 +10,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Il2CppAutoInterop.BepInEx",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestPlugin", "TestPlugin\TestPlugin.csproj", "{B0ECABB9-D3F2-4E49-AFD8-1D09BB019E14}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Il2CppAutoInterop.Logging", "Il2CppAutoInterop.Logging\Il2CppAutoInterop.Logging.csproj", "{6563DCD3-9503-4C3B-922F-0B8C443E3D4D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Il2CppAutoInterop.Common", "Il2CppAutoInterop.Common\Il2CppAutoInterop.Common.csproj", "{6563DCD3-9503-4C3B-922F-0B8C443E3D4D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{1B135A89-FF4F-42EC-9625-573AA9B35D1F}"
 EndProject

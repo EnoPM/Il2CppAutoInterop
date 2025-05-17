@@ -1,29 +1,29 @@
-﻿using Mono.Cecil;
+﻿using Il2CppAutoInterop.Cecil.Interfaces;
+using Il2CppAutoInterop.Core.Interfaces;
+using Mono.Cecil;
 
 namespace Il2CppAutoInterop.Core;
 
-public sealed class DependencyFile
+public sealed class DependencyFile : IDependencyFile
 {
-    public readonly AssemblyLoader Loader;
-    public readonly string Path;
+    public string Path { get; }
     
     public bool CanBeLoaded { get; private set; }
     public AssemblyDefinition? LoadedAssembly { get; private set; }
     public bool IsLoaded => LoadedAssembly != null;
     public bool IsAvailable => CanBeLoaded && IsLoaded;
     
-    internal DependencyFile(AssemblyLoader loader, string filePath)
+    internal DependencyFile(string filePath)
     {
-        Loader = loader;
         Path = filePath;
         CanBeLoaded = true;
     }
 
-    public void Load()
+    public void Load(IAssemblyLoader loader)
     {
         try
         {
-            LoadedAssembly = Loader.Load(Path);
+            LoadedAssembly = loader.Load(Path);
         }
         catch (BadImageFormatException)
         {
