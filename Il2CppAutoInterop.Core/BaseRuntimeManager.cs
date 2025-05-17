@@ -1,6 +1,4 @@
-﻿using Mono.Cecil;
-
-namespace Il2CppAutoInterop.Core;
+﻿namespace Il2CppAutoInterop.Core;
 
 public abstract class BaseRuntimeManager
 {

@@ -3,7 +3,6 @@ using Il2CppAutoInterop.Cecil.Attributes;
 using Il2CppAutoInterop.Cecil.Extensions;
 using Il2CppAutoInterop.Cecil.Interfaces;
 using Il2CppAutoInterop.Cecil.Utils;
-using Il2CppAutoInterop.Common;
 using Il2CppAutoInterop.Common.Interfaces;
 using Mono.Cecil;
 

@@ -21,7 +21,7 @@ public class TestPlugin : BasePlugin
     {
         ClassInjector.RegisterTypeInIl2Cpp<MyAncestorMonoBehaviour>(new RegisterTypeOptions
         {
-            Interfaces = new Il2CppInterfaceCollection(new Type[1] { typeof(ISerializationCallbackReceiver) })
+            Interfaces = new Il2CppInterfaceCollection([typeof(ISerializationCallbackReceiver)])
         });
         ClassInjector.RegisterTypeInIl2Cpp<MyMonoBehaviour>(new RegisterTypeOptions
         {
