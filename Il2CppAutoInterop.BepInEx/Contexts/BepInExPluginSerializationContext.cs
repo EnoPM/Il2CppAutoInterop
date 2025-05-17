@@ -1,10 +1,9 @@
 ﻿using Il2CppAutoInterop.Common;
-using Il2CppAutoInterop.Core.Interfaces;
 using Mono.Cecil;
 
 namespace Il2CppAutoInterop.BepInEx.Contexts;
 
-public class BepInExPluginSerializationContext : BepInExPluginMonoBehaviourContext, ITypeProcessorContext
+public class BepInExPluginSerializationContext : BepInExPluginMonoBehaviourContext
 {
     public Loadable<MethodDefinition> DeserializationMethod { get; }
 

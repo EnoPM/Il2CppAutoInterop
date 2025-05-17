@@ -1,8 +1,4 @@
-﻿using Il2CppAutoInterop.BepInEx.Contexts.Summaries;
-using Il2CppAutoInterop.BepInEx.Interfaces;
-using Il2CppAutoInterop.BepInEx.Utils;
-using Il2CppAutoInterop.Cecil.Interfaces;
-using Il2CppAutoInterop.Core.Interfaces;
+﻿using Il2CppAutoInterop.Core.Interfaces;
 
 namespace Il2CppAutoInterop.BepInEx.Contexts;
 

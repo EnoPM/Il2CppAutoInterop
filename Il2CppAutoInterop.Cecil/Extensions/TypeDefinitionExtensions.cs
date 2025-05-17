@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Il2CppAutoInterop.Cecil.Utils;
-using Il2CppAutoInterop.Common;
 using Il2CppAutoInterop.Common.Logging;
 using Mono.Cecil;
 
@@ -36,14 +35,14 @@ public static class TypeDefinitionExtensions
         return target.Value.IsAssignableFrom(source);
     }
 
-    public static bool IsAssignableFrom(this TypeDefinition source, TypeDefinition target) => target.IsAssignableTo(source);
+    private static bool IsAssignableFrom(this TypeDefinition source, TypeDefinition target) => target.IsAssignableTo(source);
     
     public static bool IsAssignableTo(this TypeDefinition source, LoadableType target)
     {
         return source.IsAssignableTo(target.FullName);
     }
-    
-    public static bool IsAssignableTo(this TypeDefinition source, TypeDefinition target)
+
+    private static bool IsAssignableTo(this TypeDefinition source, TypeDefinition target)
     {
         return source.IsAssignableTo(target.FullName);
     }

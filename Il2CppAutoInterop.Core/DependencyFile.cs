@@ -1,5 +1,4 @@
 ﻿using Il2CppAutoInterop.Cecil.Interfaces;
-using Il2CppAutoInterop.Core.Interfaces;
 using Mono.Cecil;
 
 namespace Il2CppAutoInterop.Core;

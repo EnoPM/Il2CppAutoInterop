@@ -8,15 +8,13 @@ namespace Il2CppAutoInterop.Core;
 public sealed class AssemblyLoader : IAssemblyLoader
 {
     public IAssemblyDependencyManager Dependencies { get; }
-    private readonly AssemblyLoader? _parent;
     private readonly ReaderParameters _readerParameters;
 
     public AssemblyLoader(AssemblyLoader? parent = null)
     {
         Dependencies = new AssemblyDependencyManager(this);
 
-        _parent = parent;
-        _readerParameters = _parent?._readerParameters ?? new ReaderParameters
+        _readerParameters = parent?._readerParameters ?? new ReaderParameters
         {
             ReadingMode = ReadingMode.Immediate,
             InMemory = true,
