@@ -9,7 +9,7 @@ public static class ModuleDefinitionExtensions
     public static TypeDefinition? Resolve(
         this ModuleDefinition module,
         string typeFullName,
-        IAssemblyLoaderContext? resolverContext = null
+        IAssemblyLoader? resolverContext = null
     )
     {
         return module.ResolveInModule(typeFullName) ?? module.ResolveInReferences(typeFullName, resolverContext);
@@ -31,7 +31,7 @@ public static class ModuleDefinitionExtensions
     public static TypeDefinition? ResolveInReferences(
         this ModuleDefinition module,
         string typeFullName,
-        IAssemblyLoaderContext? resolverContext = null
+        IAssemblyLoader? resolverContext = null
     )
     {
         foreach (var reference in module.AssemblyReferences)

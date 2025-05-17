@@ -1,4 +1,4 @@
-﻿using Il2CppAutoInterop.BepInEx.Utils;
+﻿using Il2CppAutoInterop.BepInEx.Contexts;
 using Il2CppAutoInterop.Cecil.Extensions;
 using Mono.Cecil;
 
@@ -7,7 +7,7 @@ namespace Il2CppAutoInterop.BepInEx.Extensions;
 public static class ModuleDefinitionExtensions
 {
     public static MethodDefinition? GetBepInExPluginEntryPointMethod(this ModuleDefinition module,
-        ResolvedDefinitions types)
+        InteropTypesContext types)
     {
         var type = module.GetAllTypes()
             .FirstOrDefault(x => x.IsAssignableTo(types.BepInExBasePlugin));

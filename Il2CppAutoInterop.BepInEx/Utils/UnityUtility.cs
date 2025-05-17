@@ -1,4 +1,5 @@
-﻿using Il2CppAutoInterop.Cecil.Extensions;
+﻿using Il2CppAutoInterop.BepInEx.Contexts;
+using Il2CppAutoInterop.Cecil.Extensions;
 using Il2CppAutoInterop.Core.Utils;
 using Mono.Cecil;
 
@@ -6,20 +7,20 @@ namespace Il2CppAutoInterop.BepInEx.Utils;
 
 internal static class UnityUtility
 {
-    internal static List<TypeDefinition> GetMonoBehaviourTypes(ModuleDefinition module, ResolvedDefinitions definitions)
+    internal static List<TypeDefinition> GetMonoBehaviourTypes(ModuleDefinition module, InteropTypesContext interopTypes)
     {
         var types = module.GetAllTypes()
-            .Where(definitions.IsMonoBehaviour)
+            .Where(interopTypes.IsMonoBehaviour)
             .ToList();
 
         var sorter = new TopologicalSorter<TypeDefinition>(types, ResolveMonoBehaviourDependencies);
         return sorter.Sort();
     }
 
-    internal static List<FieldDefinition> GetSerializedFields(TypeDefinition type, ResolvedDefinitions definitions)
+    internal static List<FieldDefinition> GetSerializedFields(TypeDefinition type, InteropTypesContext interopTypes)
     {
         return type.Fields
-            .Where(definitions.IsSerializedField)
+            .Where(interopTypes.IsSerializedField)
             .ToList();
     }
 
@@ -28,16 +29,16 @@ internal static class UnityUtility
         return [type.BaseType.Resolve()];
     }
     
-    private static bool IsSerializedField(this ResolvedDefinitions definitions, FieldDefinition field)
+    private static bool IsSerializedField(this InteropTypesContext interopTypes, FieldDefinition field)
     {
         if (field.IsLiteral || field.IsStatic || field.IsFamilyOrAssembly || field.IsInitOnly) return false;
         if (field.HasCustomAttributes)
         {
-            if (field.HasCustomAttribute(definitions.NonSerializedAttribute))
+            if (field.HasCustomAttribute(interopTypes.NonSerializedAttribute))
             {
                 return false;
             }
-            if (field.HasCustomAttribute(definitions.SerializeFieldAttribute))
+            if (field.HasCustomAttribute(interopTypes.SerializeFieldAttribute))
             {
                 return true;
             }
@@ -45,8 +46,8 @@ internal static class UnityUtility
         return field.IsPublic;
     }
 
-    private static bool IsMonoBehaviour(this ResolvedDefinitions definitions, TypeDefinition type)
+    private static bool IsMonoBehaviour(this InteropTypesContext interopTypes, TypeDefinition type)
     {
-        return type.IsAssignableTo(definitions.MonoBehaviour);
+        return type.IsAssignableTo(interopTypes.MonoBehaviour);
     }
 }

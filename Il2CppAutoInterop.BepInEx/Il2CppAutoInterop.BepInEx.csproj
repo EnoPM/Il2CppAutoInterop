@@ -3,7 +3,7 @@
     <Import Project="$(SolutionDir)\Common\Compatibility.props" />
 
     <PropertyGroup>
-        <AssemblyVersion>0.0.1</AssemblyVersion>
+        <AssemblyVersion>0.0.2</AssemblyVersion>
     </PropertyGroup>
 
     <ItemGroup>
@@ -12,6 +12,10 @@
 
     <ItemGroup>
       <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.14.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="CSharpGenerators\" />
     </ItemGroup>
 
     <Import Project="$(SolutionDir)\Common\BepInExCoreAddon.props" />

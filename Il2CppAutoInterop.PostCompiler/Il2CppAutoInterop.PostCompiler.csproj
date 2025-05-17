@@ -4,11 +4,15 @@
     
     <PropertyGroup>
         <OutputType>Exe</OutputType>
-        <AssemblyVersion>0.0.1</AssemblyVersion>
+        <AssemblyVersion>0.0.2</AssemblyVersion>
     </PropertyGroup>
     
     <ItemGroup>
       <ProjectReference Include="..\Il2CppAutoInterop.BepInEx\Il2CppAutoInterop.BepInEx.csproj" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <PackageReference Include="CommandLineParser" Version="2.9.1" />
     </ItemGroup>
 
 </Project>
