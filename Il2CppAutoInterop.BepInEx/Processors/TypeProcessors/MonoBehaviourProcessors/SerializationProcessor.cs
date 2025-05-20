@@ -3,6 +3,7 @@ using Il2CppAutoInterop.BepInEx.Processors.FieldProcessors;
 using Il2CppAutoInterop.BepInEx.Utils;
 using Il2CppAutoInterop.Cecil.Extensions;
 using Il2CppAutoInterop.Common;
+using Il2CppAutoInterop.Common.Logging;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 
@@ -33,7 +34,7 @@ public sealed class SerializationProcessor : BaseMonoBehaviourProcessor
 
     private void ProcessSerializedFieldInterops(List<FieldDefinition> serializedFields)
     {
-        var serializedFieldData = new List<MonoBehaviourCSharpGenerator.SerializedFieldData>();
+        var serializedFieldData = new List<SerializedFieldGenerationData>();
         foreach (var field in serializedFields)
         {
             var context = new UnitySerializedFieldContext(_context.Value, field);
@@ -51,7 +52,7 @@ public sealed class SerializationProcessor : BaseMonoBehaviourProcessor
         CreateUnityProjectRelatedFile(serializedFieldData);
     }
     
-    private void CreateUnityProjectRelatedFile(List<MonoBehaviourCSharpGenerator.SerializedFieldData> serializedFields)
+    private void CreateUnityProjectRelatedFile(List<SerializedFieldGenerationData> serializedFields)
     {
         var unityProjectDirectory = Context.UnityProjectDirectoryPath;
         if (unityProjectDirectory == null)
@@ -68,14 +69,15 @@ public sealed class SerializationProcessor : BaseMonoBehaviourProcessor
         var generator = new MonoBehaviourCSharpGenerator(_context.Value, serializedFields);
         var fileContent = generator.GenerateFileContent();
         
-        var fileName = $"{Context.ProcessingType.Namespace.Replace("/", ".")}.cs";
-        var path = Context.ProcessingType.Namespace.Split(".");
-        var fileDirectoryPath = Path.Combine(generatedDirectory, Path.Combine(path));
+        var fileName = $"{Context.ProcessingType.Name.Replace("/", ".")}.cs";
+        var paths = Context.ProcessingType.Namespace.Split(".");
+        var fileDirectoryPath = Path.Combine(generatedDirectory, Path.Combine(paths));
         if (!Directory.Exists(fileDirectoryPath))
         {
             Directory.CreateDirectory(fileDirectoryPath);
         }
         var filePath = Path.Combine(fileDirectoryPath, fileName);
+        Logger.Instance.Info($"Creating Unity project related file for {filePath}");
         File.WriteAllText(filePath, fileContent);
     }
 

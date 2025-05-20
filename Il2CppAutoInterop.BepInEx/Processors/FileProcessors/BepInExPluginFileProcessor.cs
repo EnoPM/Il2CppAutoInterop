@@ -8,13 +8,12 @@ using Mono.Cecil;
 
 namespace Il2CppAutoInterop.BepInEx.Processors.FileProcessors;
 
-public sealed class BepInExFileProcessor : BaseFileProcessor<BepInExPluginFileContext>
+public sealed class BepInExPluginFileProcessor : BaseFileProcessor<BepInExPluginFileContext>
 {
     public BepInExPluginAssemblyProcessor? AssemblyProcessor { get; private set; }
     
-    public BepInExFileProcessor(BepInExPluginFileContext context) : base(context)
+    public BepInExPluginFileProcessor(BepInExPluginFileContext context) : base(context)
     {
-        
     }
 
     protected override IAssemblyLoader CreateLoader()
@@ -54,7 +53,7 @@ public sealed class BepInExFileProcessor : BaseFileProcessor<BepInExPluginFileCo
     {
         if (AssemblyProcessor == null)
         {
-            throw ExceptionFactory.AssemblyNotYetLoaded<BepInExFileProcessor>(nameof(Process), Context.InputPath);
+            throw ExceptionFactory.AssemblyNotYetLoaded<BepInExPluginFileProcessor>(nameof(Process), Context.InputPath);
         }
         AssemblyProcessor.Process();
     }
