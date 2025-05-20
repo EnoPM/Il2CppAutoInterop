@@ -1,4 +1,5 @@
 ﻿using Il2CppAutoInterop.BepInEx.Contexts;
+using Il2CppAutoInterop.Common.Logging;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -7,20 +8,8 @@ using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 namespace Il2CppAutoInterop.BepInEx.Utils;
 
-public sealed class MonoBehaviourCSharpGenerator(BepInExPluginSerializationContext context, List<MonoBehaviourCSharpGenerator.SerializedFieldData> serializedFields)
+public sealed class MonoBehaviourCSharpGenerator(BepInExPluginSerializationContext context, List<SerializedFieldGenerationData> serializedFields)
 {
-    public sealed class SerializedFieldData
-    {
-        public FieldDefinition UsableField { get; }
-        public FieldDefinition SerializedField { get; }
-
-        public SerializedFieldData(FieldDefinition usableField, FieldDefinition serializedField)
-        {
-            UsableField = usableField;
-            SerializedField = serializedField;
-        }
-    }
-    
     public string GenerateFileContent()
     {
         var usings = new HashSet<string>();

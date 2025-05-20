@@ -38,9 +38,9 @@ public class Il2CppSerializedFieldProcessor : BaseFieldProcessor<UnitySerialized
         */
     }
 
-    public MonoBehaviourCSharpGenerator.SerializedFieldData ToSerializedFieldData()
+    public SerializedFieldGenerationData ToSerializedFieldData()
     {
-        return new MonoBehaviourCSharpGenerator.SerializedFieldData(UsableField, _serializedField.Value);
+        return new SerializedFieldGenerationData(UsableField, _serializedField.Value);
     }
 
     private void RenameUsedField()
