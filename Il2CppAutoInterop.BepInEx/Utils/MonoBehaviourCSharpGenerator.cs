@@ -1,4 +1,5 @@
 ﻿using Il2CppAutoInterop.BepInEx.Contexts;
+using Il2CppAutoInterop.Common.Logging;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -7,11 +8,44 @@ using CSharp = Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 namespace Il2CppAutoInterop.BepInEx.Utils;
 
-public sealed class MonoBehaviourCSharpGenerator(BepInExPluginSerializationContext context, List<SerializedFieldGenerationData> serializedFields)
+public sealed class MonoBehaviourCSharpGenerator
 {
-    private string BaseNamespace { get; } = context.ProcessingType.Namespace;
-    private NameSyntax BaseNamespaceSyntax { get; } = CSharp.ParseName(context.ProcessingType.Namespace);
+    private readonly BepInExPluginSerializationContext _context;
+    private readonly List<SerializedFieldGenerationData> _serializedFields;
+    private string BaseNamespace { get; }
+    private NameSyntax BaseNamespaceSyntax { get; }
     private HashSet<string> UsingDirectives { get; } = [];
+
+    private Dictionary<string, PredefinedTypeSyntax> PredefinedTypes { get; }
+
+    public MonoBehaviourCSharpGenerator(BepInExPluginSerializationContext context, List<SerializedFieldGenerationData> serializedFields)
+    {
+        _context = context;
+        _serializedFields = serializedFields;
+        BaseNamespace = context.ProcessingType.Namespace;
+        BaseNamespaceSyntax = CSharp.ParseName(context.ProcessingType.Namespace);
+
+        var system = context.ProcessingModule.TypeSystem;
+
+        PredefinedTypes = new Dictionary<string, PredefinedTypeSyntax>
+        {
+            [system.Boolean.FullName] = PredefinedType(SyntaxKind.BoolKeyword),
+            [system.Byte.FullName] = PredefinedType(SyntaxKind.ByteKeyword),
+            [system.SByte.FullName] = PredefinedType(SyntaxKind.SByteKeyword),
+            [system.Char.FullName] = PredefinedType(SyntaxKind.CharKeyword),
+            [system.Double.FullName] = PredefinedType(SyntaxKind.DoubleKeyword),
+            [system.Single.FullName] = PredefinedType(SyntaxKind.FloatKeyword),
+            [system.Int32.FullName] = PredefinedType(SyntaxKind.IntKeyword),
+            [system.UInt32.FullName] = PredefinedType(SyntaxKind.UIntKeyword),
+            [system.Int64.FullName] = PredefinedType(SyntaxKind.LongKeyword),
+            [system.UInt64.FullName] = PredefinedType(SyntaxKind.ULongKeyword),
+            [system.Int16.FullName] = PredefinedType(SyntaxKind.ShortKeyword),
+            [system.UInt16.FullName] = PredefinedType(SyntaxKind.UShortKeyword),
+            [system.Object.FullName] = PredefinedType(SyntaxKind.ObjectKeyword),
+            [system.String.FullName] = PredefinedType(SyntaxKind.StringKeyword),
+            [system.Void.FullName] = PredefinedType(SyntaxKind.VoidKeyword),
+        };
+    }
 
     public string GenerateFileContent()
     {
@@ -32,7 +66,7 @@ public sealed class MonoBehaviourCSharpGenerator(BepInExPluginSerializationConte
     private HashSet<UsingDirectiveSyntax> GetUsingDirectiveDeclarations()
     {
         var usingDirectives = new HashSet<UsingDirectiveSyntax>();
-        
+
         foreach (var ns in UsingDirectives)
         {
             if (ns == BaseNamespace) continue;
@@ -40,14 +74,14 @@ public sealed class MonoBehaviourCSharpGenerator(BepInExPluginSerializationConte
             var usingDirective = CSharp.UsingDirective(namespaceSyntax);
             usingDirectives.Add(usingDirective);
         }
-        
+
         return usingDirectives;
     }
 
     private NamespaceDeclarationSyntax GetNamespaceDeclaration()
     {
         var typeDeclaration = GetTypeDeclaration();
-        
+
         var namespaceDeclaration = CSharp.NamespaceDeclaration(BaseNamespaceSyntax)
             .AddMembers(typeDeclaration);
 
@@ -57,38 +91,38 @@ public sealed class MonoBehaviourCSharpGenerator(BepInExPluginSerializationConte
     private ClassDeclarationSyntax GetTypeDeclaration()
     {
         var members = new List<MemberDeclarationSyntax>();
-        
+
         members.AddRange(GetSerializedFieldDeclarations());
         members.AddRange(GetSerializedMethodDeclarations());
-        
-        var baseType = GetTypeSyntax(context.ProcessingType.BaseType);
-        RegisterUsingDirectiveType(context.ProcessingType.BaseType);
 
-        var classDeclaration = CSharp.ClassDeclaration(context.ProcessingType.Name)
+        var baseType = GetTypeSyntax(_context.ProcessingType.BaseType);
+        RegisterUsingDirectiveType(_context.ProcessingType.BaseType);
+
+        var classDeclaration = CSharp.ClassDeclaration(_context.ProcessingType.Name)
             .AddModifiers(CSharp.Token(SyntaxKind.PublicKeyword))
             .AddBaseListTypes(CSharp.SimpleBaseType(baseType))
             .AddMembers(members.ToArray());
 
-        if (context.ProcessingType.IsAbstract)
+        if (_context.ProcessingType.IsAbstract)
         {
             classDeclaration = classDeclaration.AddModifiers(CSharp.Token(SyntaxKind.AbstractKeyword));
         }
-        else if (context.ProcessingType.IsSealed)
+        else if (_context.ProcessingType.IsSealed)
         {
             classDeclaration = classDeclaration.AddModifiers(CSharp.Token(SyntaxKind.SealedKeyword));
         }
 
         return classDeclaration;
     }
-    
+
     private FieldDeclarationSyntax[] GetSerializedFieldDeclarations()
     {
         var fields = new List<FieldDeclarationSyntax>();
 
-        foreach (var field in serializedFields)
+        foreach (var field in _serializedFields)
         {
-            var isPluginMonoBehaviourFieldType = Il2CppInteropUtility.IsPluginMonoBehaviourFieldType(field.UsableField, context);
-            var usableFieldType = isPluginMonoBehaviourFieldType ? context.InteropTypes.GameObjectType.Value : field.UsableField.FieldType;
+            var isPluginMonoBehaviourFieldType = Il2CppInteropUtility.IsPluginMonoBehaviourFieldType(field.UsableField, _context);
+            var usableFieldType = isPluginMonoBehaviourFieldType ? _context.InteropTypes.GameObjectType.Value : field.UsableField.FieldType;
             var fieldTypeSyntax = GetTypeSyntax(usableFieldType);
             var fieldDeclarationSyntax = CSharp.FieldDeclaration(
                     CSharp.VariableDeclaration(fieldTypeSyntax)
@@ -105,11 +139,23 @@ public sealed class MonoBehaviourCSharpGenerator(BepInExPluginSerializationConte
     {
         var methods = new List<MethodDeclarationSyntax>();
 
-        foreach (var method in context.ProcessingType.Methods)
+        foreach (var method in _context.ProcessingType.Methods)
         {
-            if (method.IsConstructor || method.IsStatic || !method.IsPublic) continue;
-            if (method.HasParameters || method.HasGenericParameters) continue;
-            if (method.ReturnType.FullName != context.ProcessingModule.TypeSystem.Void.FullName) continue;
+            if (method.IsConstructor || method.IsStatic || !method.IsPublic || method.IsGetter || method.IsSetter) continue;
+            if (method.HasGenericParameters) continue;
+
+            if (method.Parameters.Any(p => !IsManagedSimpleType(p.ParameterType)))
+            {
+                var allParameters = method.Parameters.Select(x => $"'{x.ParameterType.FullName}'").ToArray();
+                Logger.Instance.Warning($"Method {method.Name} has unsupported parameter type {string.Join(", ", allParameters)}");
+                continue;
+            }
+            if (!IsManagedSimpleType(method.ReturnType))
+            {
+                Logger.Instance.Warning($"Method {method.Name} has unsupported return type '{method.ReturnType.FullName}'");
+                continue;
+            }
+
             var modifiers = new List<SyntaxToken>
             {
                 CSharp.Token(SyntaxKind.PublicKeyword)
@@ -121,7 +167,6 @@ public sealed class MonoBehaviourCSharpGenerator(BepInExPluginSerializationConte
             }
             else if (method.IsVirtual && method.IsReuseSlot && !method.IsNewSlot)
             {
-
                 modifiers.Add(CSharp.Token(SyntaxKind.OverrideKeyword));
                 if (method.IsFinal)
                 {
@@ -137,10 +182,26 @@ public sealed class MonoBehaviourCSharpGenerator(BepInExPluginSerializationConte
                 modifiers.Add(CSharp.Token(SyntaxKind.NewKeyword));
             }
 
-            var methodDecl = CSharp.MethodDeclaration(
-                    CSharp.PredefinedType(CSharp.Token(SyntaxKind.VoidKeyword)),
-                    CSharp.Identifier(method.Name))
-                .WithModifiers(CSharp.TokenList(modifiers));
+            var returnType = PredefinedTypes.TryGetValue(method.ReturnType.FullName, out var predefinedReturnType)
+                ? predefinedReturnType
+                : GetTypeSyntax(method.ReturnType);
+            
+            var parameters = new List<ParameterSyntax>();
+
+            foreach (var parameterDefinition in method.Parameters)
+            {
+                var typeSyntax = PredefinedTypes.TryGetValue(parameterDefinition.ParameterType.FullName, out var predefinedTypeSyntax)
+                    ? predefinedTypeSyntax
+                    : GetTypeSyntax(parameterDefinition.ParameterType);
+                var parameter = CSharp.Parameter(CSharp.Identifier(parameterDefinition.Name))
+                    .WithType(typeSyntax);
+                
+                parameters.Add(parameter);
+            }
+
+            var methodDecl = CSharp.MethodDeclaration(returnType, CSharp.Identifier(method.Name))
+                .WithModifiers(CSharp.TokenList(modifiers))
+                .WithParameterList(CSharp.ParameterList(CSharp.SeparatedList(parameters)));
 
             if (method.IsAbstract)
             {
@@ -148,14 +209,31 @@ public sealed class MonoBehaviourCSharpGenerator(BepInExPluginSerializationConte
             }
             else
             {
-                methodDecl = methodDecl.WithBody(CSharp.Block());
+                if (method.ReturnType.FullName == _context.ProcessingModule.TypeSystem.Void.FullName)
+                {
+                    methodDecl = methodDecl.WithBody(CSharp.Block());
+                }
+                else
+                {
+                    methodDecl = methodDecl.WithBody(CSharp.Block(
+                        CSharp.SingletonList<StatementSyntax>(
+                            CSharp.ReturnStatement(CSharp.LiteralExpression(SyntaxKind.DefaultLiteralExpression))
+                        )
+                    ));
+                }
             }
 
             methods.Add(methodDecl);
         }
-        
+
         return methods.ToArray();
     }
+
+    private bool IsManagedSimpleType(TypeReference type)
+    {
+        return PredefinedTypes.ContainsKey(type.FullName);
+    }
+
 
     private static TypeSyntax GetTypeSyntax(TypeReference? typeReference)
     {
@@ -206,4 +284,10 @@ public sealed class MonoBehaviourCSharpGenerator(BepInExPluginSerializationConte
 
         return namespaces;
     }
+
+    private static PredefinedTypeSyntax PredefinedType(SyntaxKind syntaxKind)
+    {
+        return CSharp.PredefinedType(CSharp.Token(syntaxKind));
+    }
+
 }
