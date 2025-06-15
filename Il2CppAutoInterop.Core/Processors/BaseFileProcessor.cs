@@ -1,5 +1,6 @@
 ﻿using Il2CppAutoInterop.Cecil.Interfaces;
 using Il2CppAutoInterop.Common;
+using Il2CppAutoInterop.Common.Logging;
 using Il2CppAutoInterop.Core.Interfaces;
 using Mono.Cecil;
 
@@ -19,7 +20,6 @@ public abstract class BaseFileProcessor<TContext>(TContext context) : BaseProces
 
     public virtual void Load()
     {
-        Loader.LoadDependencies();
         Context.Loader = Loader;
         try
         {
@@ -44,6 +44,7 @@ public abstract class BaseFileProcessor<TContext>(TContext context) : BaseProces
         if (LoadedAssembly == null) throw NotLoaded(nameof(Save));
         
         var fileName = Path.GetFileName(Context.InputPath);
+        Logger.Instance.Log($"Saving assembly to {Path.Combine(directoryPath, fileName)}", ConsoleColor.Blue);
         LoadedAssembly.Write(Path.Combine(directoryPath, fileName));
     }
     

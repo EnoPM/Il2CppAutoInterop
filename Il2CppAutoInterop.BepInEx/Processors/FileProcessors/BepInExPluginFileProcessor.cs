@@ -39,6 +39,11 @@ public sealed class BepInExPluginFileProcessor : BaseFileProcessor<BepInExPlugin
             loader.Dependencies.AddDirectory(dependencyDirectoryPath);
         }
 
+        foreach (var filePath in Context.AssemblyFilePaths)
+        {
+            loader.Dependencies.AddFile(filePath);
+        }
+
         return loader;
     }
 

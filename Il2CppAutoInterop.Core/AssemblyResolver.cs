@@ -1,4 +1,5 @@
 ﻿using Il2CppAutoInterop.Cecil.Interfaces;
+using Il2CppAutoInterop.Common.Logging;
 using Mono.Cecil;
 
 namespace Il2CppAutoInterop.Core;
@@ -16,6 +17,11 @@ public sealed class AssemblyResolver : DefaultAssemblyResolver
 
     private AssemblyDefinition? OnResolveFailure(object sender, AssemblyNameReference reference)
     {
-        return _context.ResolveAssembly(reference);
+        var result = _context.ResolveAssembly(reference);
+        if (result != null)
+        {
+            RegisterAssembly(result);
+        }
+        return result;
     }
 }

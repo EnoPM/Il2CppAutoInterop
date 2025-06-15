@@ -8,7 +8,7 @@ public interface IDependencyFile
     public bool IsLoaded { get; }
     public bool IsAvailable { get; }
     public bool CanBeLoaded { get; }
-    public AssemblyDefinition? LoadedAssembly { get; }
+    public AssemblyDefinition? LoadedAssembly { get; set; }
 
     public void Load(IAssemblyLoader loader);
 }

@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using Il2CppAutoInterop.Cecil.Extensions;
 using Il2CppAutoInterop.Cecil.Interfaces;
+using Il2CppAutoInterop.Common.Logging;
 using Mono.Cecil;
 
 namespace Il2CppAutoInterop.Core;
@@ -27,6 +28,7 @@ public sealed class AssemblyDependencyManager(AssemblyLoader loader) : IAssembly
 
     public void LoadAllFiles()
     {
+        Logger.Instance.Info($"LoadAllFiles");
         foreach (var dependency in Files)
         {
             if (dependency.IsLoaded || !dependency.CanBeLoaded) continue;
@@ -59,6 +61,24 @@ public sealed class AssemblyDependencyManager(AssemblyLoader loader) : IAssembly
         }
 
         return null;
+    }
+
+    public List<AssemblyDefinition> GetDependentAssemblies(AssemblyNameDefinition from)
+    {
+        var result = new List<AssemblyDefinition>();
+
+        foreach (var file in Files)
+        {
+            if (!file.IsLoaded) continue;
+            var assembly = file.LoadedAssembly!;
+            if (assembly.Modules.All(module => module.AssemblyReferences.All(x => x.FullName != from.FullName)))
+            {
+                continue;
+            }
+            result.Add(assembly);
+        }
+        
+        return result;
     }
 
     private void AddFiles(List<string> existingPaths, params string[] files)

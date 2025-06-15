@@ -14,4 +14,6 @@ public interface IAssemblyDependencyManager
     
     public AssemblyDefinition? FindLoadedAssembly(AssemblyName assemblyName);
     public TypeDefinition? FindLoadedType(string typeFullName, in List<string> excludedFiles);
+
+    public List<AssemblyDefinition> GetDependentAssemblies(AssemblyNameDefinition from);
 }
