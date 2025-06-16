@@ -142,6 +142,8 @@ public class MyMonoBehaviour(IntPtr ptr) : MonoBehaviour(ptr)
         this.__Il2CppAutoInterop_UsableField_myString = myString.Get();
         this.__Il2CppAutoInterop_UsableField_myText = myText.Get();
      }
+     
+     private void Awake() => this.__Il2CppAutoInterop_MyMonoBehaviour_AfterDeserializeMethod();
 }
 ```
 
