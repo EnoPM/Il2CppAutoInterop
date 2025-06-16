@@ -3,7 +3,7 @@
     <Import Project="$(SolutionDir)\Common\Compatibility.props" />
     
     <PropertyGroup>
-        <AssemblyVersion>0.0.2</AssemblyVersion>
+        <AssemblyVersion>1.0.0</AssemblyVersion>
     </PropertyGroup>
 
     <ItemGroup>
