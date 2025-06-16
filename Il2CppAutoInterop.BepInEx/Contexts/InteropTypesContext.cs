@@ -2,6 +2,7 @@
 using Il2CppAutoInterop.Cecil.Attributes;
 using Il2CppAutoInterop.Cecil.Interfaces;
 using Il2CppAutoInterop.Cecil.Utils;
+using Il2CppAutoInterop.Common.Logging;
 using Mono.Cecil;
 
 namespace Il2CppAutoInterop.BepInEx.Contexts;
@@ -67,6 +68,12 @@ public sealed class InteropTypesContext : BaseDefinitionResolver
     
     [CecilResolve("System.Void Il2CppInterop.Runtime.Injection.Il2CppInterfaceCollection::.ctor(System.Collections.Generic.IEnumerable`1<System.Type>)", ResolverContext.Referenceable)]
     internal LoadableMethod Il2CppInterfaceCollectionConstructor { get; set; } = null!;
+    
+    [CecilResolve("UnityEngine.GameObject")]
+    internal LoadableType GameObjectType { get; set; } = null!;
+    
+    [CecilResolve("T UnityEngine.GameObject::GetComponent()")]
+    internal LoadableMethod GameObjectGetComponentMethod { get; set; } = null!;
 
     internal InteropTypesContext(IAssemblyLoader loader, ModuleDefinition module) : base(loader, module)
     {

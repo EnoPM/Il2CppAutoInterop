@@ -8,7 +8,7 @@ public sealed class DependencyFile : IDependencyFile
     public string Path { get; }
     
     public bool CanBeLoaded { get; private set; }
-    public AssemblyDefinition? LoadedAssembly { get; private set; }
+    public AssemblyDefinition? LoadedAssembly { get; set; }
     public bool IsLoaded => LoadedAssembly != null;
     public bool IsAvailable => CanBeLoaded && IsLoaded;
     
@@ -20,6 +20,7 @@ public sealed class DependencyFile : IDependencyFile
 
     public void Load(IAssemblyLoader loader)
     {
+        if (IsLoaded || !CanBeLoaded) return;
         try
         {
             LoadedAssembly = loader.Load(Path);

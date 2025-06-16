@@ -7,12 +7,10 @@ internal static class Program
 {
     private static void Main(string[] args)
     {
-        var result = Parser.Default
+        Parser.Default
             .ParseArguments<PostCompilerOptions>(args)
             .WithParsed(BepInExIl2CppInterop.Run)
             .WithNotParsed(HandleArgumentErrors);
-        
-        Console.WriteLine($"Parser result: {result.Tag.ToString()}");
     }
 
     private static void HandleArgumentErrors(IEnumerable<Error> errors)

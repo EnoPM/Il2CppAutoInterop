@@ -8,7 +8,7 @@ namespace Il2CppAutoInterop.Cecil.Extensions;
 public static class TypeDefinitionExtensions
 {
     private static readonly HashSet<string> UnresolvedWarnedAncestors = [];
-    
+
     public static bool TryFindNestedType(
         this TypeDefinition type,
         string fullName,
@@ -29,14 +29,14 @@ public static class TypeDefinitionExtensions
         result = null;
         return false;
     }
-    
+
     public static bool IsAssignableFrom(this TypeDefinition source, LoadableType target)
     {
         return target.Value.IsAssignableFrom(source);
     }
 
     private static bool IsAssignableFrom(this TypeDefinition source, TypeDefinition target) => target.IsAssignableTo(source);
-    
+
     public static bool IsAssignableTo(this TypeDefinition source, LoadableType target)
     {
         return source.IsAssignableTo(target.FullName);

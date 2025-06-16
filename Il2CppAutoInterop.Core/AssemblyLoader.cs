@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Il2CppAutoInterop.Cecil.Extensions;
 using Il2CppAutoInterop.Cecil.Interfaces;
+using Il2CppAutoInterop.Common.Logging;
 using Mono.Cecil;
 
 namespace Il2CppAutoInterop.Core;
@@ -35,6 +36,17 @@ public sealed class AssemblyLoader : IAssemblyLoader
 
     public AssemblyDefinition Load(string assemblyPath)
     {
+        var dependency = Dependencies.Files.FirstOrDefault(x => x.Path == assemblyPath);
+        if (dependency == null)
+        {
+            dependency = new DependencyFile(assemblyPath);
+            Dependencies.Files.Add(dependency);
+            return dependency.LoadedAssembly = AssemblyDefinition.ReadAssembly(assemblyPath, _readerParameters);
+        }
+        if (dependency.IsLoaded)
+        {
+            return dependency.LoadedAssembly!;
+        }
         return AssemblyDefinition.ReadAssembly(assemblyPath, _readerParameters);
     }
 

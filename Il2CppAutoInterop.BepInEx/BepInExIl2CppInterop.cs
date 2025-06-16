@@ -62,8 +62,12 @@ public sealed class BepInExIl2CppInterop
     private void Run()
     {
         _stopwatch.Start();
-        LoadProcessors();
         var sortedProcessors = GetSortedProcessors();
+        if (_context.Loader == null)
+        {
+            throw new Exception($"No loader found for {_context.BepInExDirectoryPath}");
+        }
+        _context.Loader.LoadDependencies();
 
         foreach (var processor in sortedProcessors)
         {
@@ -94,30 +98,31 @@ public sealed class BepInExIl2CppInterop
         }
     }
 
-    private void LoadProcessors()
+    private void LoadProcessor(BepInExPluginFileProcessor processor)
     {
-        foreach (var processor in _processors)
+        if (_context.Loader != null)
         {
-            if (_context.Loader != null)
-            {
-                processor.Context.Loader = _context.Loader;
-            }
-            processor.Load();
-            if (_context.Loader == null)
-            {
-                _context.Loader = processor.Context.Loader;
-            }
+            processor.Context.Loader = _context.Loader;
+        }
+        processor.Load();
+        if (_context.Loader == null)
+        {
+            _context.Loader = processor.Context.Loader;
         }
     }
 
     private List<BepInExPluginFileProcessor> GetSortedProcessors()
     {
-        var sorter = new TopologicalSorter<BepInExPluginFileProcessor>(_processors, GetLoadedProcessorDependencies);
+        var sorter = new TopologicalSorter<BepInExPluginFileProcessor>(_processors, GetProcessorDependencies);
         return sorter.Sort();
     }
 
-    private List<BepInExPluginFileProcessor> GetLoadedProcessorDependencies(BepInExPluginFileProcessor processor)
+    private List<BepInExPluginFileProcessor> GetProcessorDependencies(BepInExPluginFileProcessor processor)
     {
+        if (processor.LoadedAssembly == null)
+        {
+            LoadProcessor(processor);
+        }
         var assembly = processor.LoadedAssembly;
         if (assembly == null)
         {
