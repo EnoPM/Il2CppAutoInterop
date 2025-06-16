@@ -51,7 +51,7 @@ Il2CppAutoInterop.exe \
 | Yes      | `--output` `-o`                | Directory path    | Directory in which will be output post-processed assembly                                                     |
 | Yes      | `--BepInEx` `-b`               | Directory path    | BepInEx directory with il2Cpp interop generated                                                               |
 | No       | `--unity-project` `-u`         | Directory path    | Unity project directory path                                                                                  |
-| No       | `--experimental-serialization` | boolean           | Use experimental 'ISerializationCallbackReceiver.OnAfterDeserialize' method instead of 'MonoBehaviour.Awake'. |
+| No       | `--experimental-serialization` | boolean           | Use experimental `ISerializationCallbackReceiver.OnAfterDeserialize` method instead of `MonoBehaviour.Awake`. |
 | No       | `--randomize-version`          | boolean           | Randomize post compiled assembly version (contribution usage)                                                 |
 
 ## Examples
