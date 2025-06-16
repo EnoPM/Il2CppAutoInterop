@@ -18,8 +18,8 @@ jobs:
         with:
           dotnet-version: '9.0.x'
 
-      - name: Run build script
-        run: release.bat
+      - name: Run release script
+        run: cmd /c release.bat
 
       - name: Upload archives to release
         uses: softprops/action-gh-release@v2
