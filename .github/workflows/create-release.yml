@@ -1,9 +1,12 @@
-name: Build and Release
+name: Create release
 
 on:
-  push:
-    tags:
-      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version (e.g. v1.2.3)'
+        required: true
+        type: string
 
 permissions:
   contents: write
@@ -27,6 +30,9 @@ jobs:
       - name: Upload archives to release
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ github.event.inputs.version }}
+          name: Il2CppAutoInterop ${{ github.event.inputs.version }}
+          body: Release of Il2CppAutoInterop ${{ github.event.inputs.version }}
           files: publish/*.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
