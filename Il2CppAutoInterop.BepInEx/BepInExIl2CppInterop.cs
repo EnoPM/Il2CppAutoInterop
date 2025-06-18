@@ -96,7 +96,7 @@ public sealed class BepInExIl2CppInterop
         var allDirectories = Directory.GetDirectories(generatedDirectory, "*", SearchOption.AllDirectories);
         foreach (var directoryPath in allDirectories)
         {
-            if (allowedDirectories.Contains(directoryPath)) continue;
+            if (allowedDirectories.Any(x => x != null && x.StartsWith(directoryPath))) continue;
             if (!Directory.Exists(directoryPath)) continue;
             Directory.Delete(directoryPath, true);
             var metaFilePath = $"{directoryPath}.meta";
