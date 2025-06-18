@@ -50,4 +50,9 @@ internal static class UnityUtility
     {
         return type.IsAssignableTo(interopTypes.MonoBehaviour);
     }
+
+    public static string GetUnityEditorGeneratedDirectoryPath(string unityProjectDirectory)
+    {
+        return Path.Combine(Path.GetFullPath(unityProjectDirectory), "Assets", nameof(Il2CppAutoInterop), "Generated");
+    }
 }

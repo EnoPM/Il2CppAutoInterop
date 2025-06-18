@@ -129,7 +129,7 @@ public sealed class MonoBehaviourCSharpGenerator
                         .AddVariables(CSharp.VariableDeclarator(field.SerializedField.Name)))
                 .WithModifiers(CSharp.TokenList(CSharp.Token(SyntaxKind.PublicKeyword)));
             fields.Add(fieldDeclarationSyntax);
-            RegisterUsingDirectiveType(field.UsableField.FieldType);
+            RegisterUsingDirectiveType(usableFieldType);
         }
 
         return fields.ToArray();

@@ -2,6 +2,7 @@
 using Il2CppAutoInterop.BepInEx.Contexts;
 using Il2CppAutoInterop.BepInEx.Interfaces;
 using Il2CppAutoInterop.BepInEx.Processors.FileProcessors;
+using Il2CppAutoInterop.BepInEx.Utils;
 using Il2CppAutoInterop.Common.Logging;
 using Il2CppAutoInterop.Core.Utils;
 
@@ -73,7 +74,44 @@ public sealed class BepInExIl2CppInterop
         {
             Run(processor);
         }
+
+        CleanUpUnityProjectDirectory();
+        
         _stopwatch.Stop();
+    }
+
+    private void CleanUpUnityProjectDirectory()
+    {
+        if (_context.UnityProjectDirectoryPath == null) return;
+        var generatedDirectory = UnityUtility.GetUnityEditorGeneratedDirectoryPath(_context.UnityProjectDirectoryPath);
+        if (!Directory.Exists(generatedDirectory))
+        {
+            return;
+        }
+        
+        var allowedDirectories = _context.InteropSummary.UnityProjectGeneratedFilePaths
+            .Select(Path.GetDirectoryName)
+            .ToHashSet();
+        
+        var allDirectories = Directory.GetDirectories(generatedDirectory, "*", SearchOption.AllDirectories);
+        foreach (var directoryPath in allDirectories)
+        {
+            if (allowedDirectories.Contains(directoryPath)) continue;
+            if (!Directory.Exists(directoryPath)) continue;
+            Directory.Delete(directoryPath, true);
+        }
+
+        var allowedFiles = _context.InteropSummary.UnityProjectGeneratedFilePaths;
+        
+        var allFiles = Directory.GetFiles(generatedDirectory, "*.cs", SearchOption.AllDirectories);
+        foreach (var filePath in allFiles)
+        {
+            if (allowedFiles.Contains(filePath)) continue;
+            File.Delete(filePath);
+            var metaFilePath = $"{filePath}.meta";
+            if (!File.Exists(metaFilePath)) continue;
+            File.Delete(metaFilePath);
+        }
     }
 
     private void Run(BepInExPluginFileProcessor processor)
@@ -105,10 +143,7 @@ public sealed class BepInExIl2CppInterop
             processor.Context.Loader = _context.Loader;
         }
         processor.Load();
-        if (_context.Loader == null)
-        {
-            _context.Loader = processor.Context.Loader;
-        }
+        _context.Loader ??= processor.Context.Loader;
     }
 
     private List<BepInExPluginFileProcessor> GetSortedProcessors()

@@ -54,13 +54,12 @@ public sealed class SerializationProcessor : BaseMonoBehaviourProcessor
     
     private void CreateUnityProjectRelatedFile(List<SerializedFieldGenerationData> serializedFields)
     {
-        var unityProjectDirectory = Context.UnityProjectDirectoryPath;
-        if (unityProjectDirectory == null)
+        if (Context.UnityProjectDirectoryPath == null)
         {
             return;
         }
-        
-        var generatedDirectory = Path.Combine(unityProjectDirectory, "Assets", nameof(Il2CppAutoInterop), "Generated");
+
+        var generatedDirectory = UnityUtility.GetUnityEditorGeneratedDirectoryPath(Context.UnityProjectDirectoryPath);
         if (!Directory.Exists(generatedDirectory))
         {
             Directory.CreateDirectory(generatedDirectory);
@@ -77,6 +76,7 @@ public sealed class SerializationProcessor : BaseMonoBehaviourProcessor
             Directory.CreateDirectory(fileDirectoryPath);
         }
         var filePath = Path.Combine(fileDirectoryPath, fileName);
+        Context.InteropSummary.UnityProjectGeneratedFilePaths.Add(filePath);
         Logger.Instance.Info($"Creating Unity project related file for {filePath}");
         File.WriteAllText(filePath, fileContent);
     }

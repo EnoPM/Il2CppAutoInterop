@@ -3,4 +3,5 @@
 public sealed class InteropSummary
 {
     public HashSet<string> SerializedMonoBehaviourFullNames { get; } = [];
+    public HashSet<string> UnityProjectGeneratedFilePaths { get; } = [];
 }
