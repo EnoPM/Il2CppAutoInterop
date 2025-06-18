@@ -1,7 +1,6 @@
 ﻿using Il2CppAutoInterop.BepInEx.Contexts;
 using Il2CppAutoInterop.Cecil.Extensions;
 using Il2CppAutoInterop.Cecil.Utils;
-using Il2CppAutoInterop.Common.Logging;
 using Mono.Cecil;
 
 namespace Il2CppAutoInterop.BepInEx.Utils;
