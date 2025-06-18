@@ -23,6 +23,7 @@ public sealed class SerializationProcessor : BaseMonoBehaviourProcessor
         var serializedFields = UnityUtility.GetSerializedFields(Context.ProcessingType, Context.InteropTypes);
         if (serializedFields.Count == 0)
         {
+            CreateUnityProjectRelatedFile([]);
             return;
         }
 
