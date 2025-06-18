@@ -99,6 +99,9 @@ public sealed class BepInExIl2CppInterop
             if (allowedDirectories.Contains(directoryPath)) continue;
             if (!Directory.Exists(directoryPath)) continue;
             Directory.Delete(directoryPath, true);
+            var metaFilePath = $"{directoryPath}.meta";
+            if (!File.Exists(metaFilePath)) continue;
+            File.Delete(metaFilePath);
         }
 
         var allowedFiles = _context.InteropSummary.UnityProjectGeneratedFilePaths;
