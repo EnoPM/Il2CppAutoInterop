@@ -1,10 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <Import Project="$(SolutionDir)\Common\Compatibility.props" />
+    <Import Project="$(SolutionDir)\Common\Version.props" />
     
     <PropertyGroup>
         <OutputType>Exe</OutputType>
-        <AssemblyVersion>1.0.0</AssemblyVersion>
         <AssemblyName>Il2CppAutoInterop</AssemblyName>
     </PropertyGroup>
     

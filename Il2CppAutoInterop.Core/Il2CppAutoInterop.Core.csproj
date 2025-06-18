@@ -1,10 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <Import Project="$(SolutionDir)\Common\Compatibility.props" />
-
-    <PropertyGroup>
-        <AssemblyVersion>1.0.0</AssemblyVersion>
-    </PropertyGroup>
+    <Import Project="$(SolutionDir)\Common\Version.props" />
 
     <ItemGroup>
         <ProjectReference Include="..\Il2CppAutoInterop.Cecil\Il2CppAutoInterop.Cecil.csproj" />
